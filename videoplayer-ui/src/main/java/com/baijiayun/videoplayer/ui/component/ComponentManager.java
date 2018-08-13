@@ -1,16 +1,17 @@
-package com.baijiayun.videoplayer.ui;
+package com.baijiayun.videoplayer.ui.component;
 
 import android.content.Context;
 
-import com.baijiayun.videoplayer.ui.component.BaseComponent;
-import com.baijiayun.videoplayer.ui.component.ControllerComponent;
-import com.baijiayun.videoplayer.ui.component.LoadingComponent;
+import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponent;
 import com.baijiayun.videoplayer.ui.listener.IComponentChangeListener;
+import com.baijiayun.videoplayer.ui.listener.IFilter;
+import com.baijiayun.videoplayer.ui.listener.OnLoopListener;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -24,7 +25,7 @@ public class ComponentManager {
     private static ComponentManager instance;
 
     private ComponentManager(){
-        componentMap = new ConcurrentHashMap<>();
+        componentMap = Collections.synchronizedMap(new LinkedHashMap<String, IComponent>());
         componentChangeListeners = new CopyOnWriteArrayList<>();
     }
 
@@ -38,7 +39,6 @@ public class ComponentManager {
         }
         return instance;
     }
-
 
     public void addComponent(String key, BaseComponent component){
         componentMap.put(key, component);
@@ -65,13 +65,13 @@ public class ComponentManager {
     }
 
 
-    public void forEach(IComponentChangeListener.OnLoopListener loopListener){
+    public void forEach(OnLoopListener loopListener){
         for(IComponent component : componentMap.values()){
             loopListener.onEach(component);
         }
     }
 
-    public void forEach(IComponentChangeListener.Filter filter, IComponentChangeListener.OnLoopListener loopListener){
+    public void forEach(IFilter filter, OnLoopListener loopListener){
         for(IComponent component : componentMap.values()){
             if(filter == null || filter.filter(component)){
                 loopListener.onEach(component);
@@ -87,6 +87,10 @@ public class ComponentManager {
         componentMap.clear();
         componentChangeListeners.clear();
         addComponent(UIEventKey.KEY_LOADING_COMPONENT, new LoadingComponent(context));
+        addComponent(UIEventKey.KEY_GESTURE_COMPONENT, new GestureComponent(context));
+        //controller 需在gesture布局上方，否则会有事件冲突
         addComponent(UIEventKey.KEY_CONTROLLER_COMPONENT, new ControllerComponent(context));
+        addComponent(UIEventKey.KEY_ERROR_COMPONENT, new ErrorComponent(context));
+        addComponent(UIEventKey.KEY_MENU_COMPONENT, new MenuComponent(context));
     }
 }

@@ -6,13 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.baijiayun.videoplayer.PlayerConstants;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
-import com.baijiayun.videoplayer.ui.BJYVideoView;
-import com.baijiayun.videoplayer.ui.UIEventKey;
+import com.baijiayun.videoplayer.ui.widget.BJYVideoView;
+import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
 import com.baijiayun.videoplayer.util.Utils;
 
@@ -26,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        PlayerConstants.DEPLOY_TYPE = 0;
         videoView = findViewById(R.id.bjyvideoview);
         videoView.initPlayer(new VideoPlayerFactory.Builder()
+                //后台暂停播放
                 .setSupportBackgroundAudio(false)
-                .setSupportBreakPointPlay(false, this)
+                //开启记忆播放
+                .setSupportBreakPointPlay(true, this)
+                //绑定activity生命周期
                 .setLifecycle(getLifecycle())
         );
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        videoView.setupOnlineVideoWithId(197052L, "test12345678");
+        videoView.setupOnlineVideoWithId(getIntent().getLongExtra("videoId", 0L), getIntent().getStringExtra("token"));
         videoView.play();
     }
 

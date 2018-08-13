@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -17,7 +18,8 @@ import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.player.PlayerStatus;
-import com.baijiayun.videoplayer.ui.UIEventKey;
+import com.baijiayun.videoplayer.ui.event.UIEventKey;
+import com.baijiayun.videoplayer.ui.listener.OnTouchGestureListener;
 import com.baijiayun.videoplayer.util.Utils;
 import com.baijiayun.videoplayerui.R;
 
@@ -26,7 +28,7 @@ import com.baijiayun.videoplayerui.R;
  * Created by yongjiaming on 2018/8/7
  */
 
-public class ControllerComponent extends BaseComponent {
+public class ControllerComponent extends BaseComponent implements OnTouchGestureListener{
 
     private final int MSG_CODE_DELAY_HIDDEN_CONTROLLER = 101;
 
@@ -65,22 +67,7 @@ public class ControllerComponent extends BaseComponent {
 
     @Override
     protected View onCreateComponentView(Context context) {
-        return View.inflate(context, R.layout.layout_controller_component2, null);
-    }
-
-    @Override
-    public void onViewAttachedToWindow(View v) {
-
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(View v) {
-
-    }
-
-    @Override
-    public void onComponentEvent(int eventCode, Bundle bundle) {
-
+        return View.inflate(context, R.layout.layout_controller_component_new, null);
     }
 
     @Override
@@ -117,11 +104,6 @@ public class ControllerComponent extends BaseComponent {
     }
 
     @Override
-    public void onErrorEvent(int eventCode, Bundle bundle) {
-
-    }
-
-    @Override
     public void onCustomEvent(int eventCode, Bundle bundle) {
         switch (eventCode) {
             case UIEventKey.CUSTOM_CODE_CONTROLLER_STATUS_CHANGE:
@@ -134,6 +116,16 @@ public class ControllerComponent extends BaseComponent {
                 setSwitchScreenIcon(bundle.getBoolean(EventKey.BOOL_DATA));
                 break;
             default:
+                break;
+        }
+    }
+
+    @Override
+    public void onComponentEvent(int eventCode, Bundle bundle) {
+        switch (eventCode){
+            case UIEventKey.CUSTOM_CODE_REQUEST_SEEK:
+                int seekToPos = bundle.getInt(EventKey.INT_DATA);
+                updateUI(seekToPos, getStateGetter().getDuration());
                 break;
         }
     }
@@ -198,7 +190,6 @@ public class ControllerComponent extends BaseComponent {
                 mHandler.postDelayed(mSeekEventRunnable, 300);
             }
         });
-
     }
 
     @Override
@@ -355,11 +346,30 @@ public class ControllerComponent extends BaseComponent {
             }
         });
         mBottomAnimator.start();
-//        if(state){
-//            requestNotifyTimer();
-//        }else{
-//            requestStopTimer();
-//        }
     }
 
+    @Override
+    public void onSingleTapUp(MotionEvent event) {
+        toggleController();
+    }
+
+    @Override
+    public void onDoubleTap(MotionEvent event) {
+
+    }
+
+    @Override
+    public void onDown(MotionEvent event) {
+
+    }
+
+    @Override
+    public void onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+
+    }
+
+    @Override
+    public void onEndGesture() {
+
+    }
 }

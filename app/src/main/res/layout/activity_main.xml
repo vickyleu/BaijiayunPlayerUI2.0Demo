@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.baijiayun.videoplayer.ui.BJYVideoView
+    <com.baijiayun.videoplayer.ui.widget.BJYVideoView
         android:id="@+id/bjyvideoview"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="240dp"/>
 
 </LinearLayout>

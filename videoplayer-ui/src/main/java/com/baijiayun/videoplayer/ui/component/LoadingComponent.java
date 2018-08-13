@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
-import com.baijiayun.videoplayer.ui.UIEventKey;
+import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayerui.R;
 
 /**
@@ -37,21 +37,6 @@ public class LoadingComponent extends BaseComponent {
     }
 
     @Override
-    public void onViewAttachedToWindow(View v) {
-
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(View v) {
-
-    }
-
-    @Override
-    public void onComponentEvent(int eventCode, Bundle bundle) {
-
-    }
-
-    @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
         switch (eventCode){
             case OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_START:
@@ -60,7 +45,6 @@ public class LoadingComponent extends BaseComponent {
             case OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_TO:
                 setLoadingState(true);
                 break;
-
             case OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_RENDER_START:
             case OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_END:
             case OnPlayerEventListener.PLAYER_EVENT_ON_STOP:
@@ -74,11 +58,6 @@ public class LoadingComponent extends BaseComponent {
     @Override
     public void onErrorEvent(int eventCode, Bundle bundle) {
         setLoadingState(false);
-    }
-
-    @Override
-    public void onCustomEvent(int eventCode, Bundle bundle) {
-
     }
 
     private void setLoadingState(boolean show) {

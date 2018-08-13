@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">videoplayerui</string>
+
+    <string name="bjplayer_video_rate_0_7">0.7x</string>
+    <string name="bjplayer_video_rate_1">1x</string>
+    <string name="bjplayer_video_rate_1_2">1.2x</string>
+    <string name="bjplayer_video_rate_1_5">1.5x</string>
+    <string name="bjplayer_video_rate_2">2x</string>
+
+    <array name="bjy_player_definition">
+        <item>纯音频</item>
+        <item>标清</item>
+        <item>高清</item>
+        <item>超清</item>
+        <item>720P</item>
+        <item>1080P</item>
+    </array>
 </resources>
