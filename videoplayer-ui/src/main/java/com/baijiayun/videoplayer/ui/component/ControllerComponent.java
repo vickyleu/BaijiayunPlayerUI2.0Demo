@@ -45,7 +45,7 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
     private int mBufferPercentage;
 
     private int mSeekProgress = -1;
-    private boolean mControllerTopEnable;
+    private boolean mControllerTopEnable = true;
     private ObjectAnimator mBottomAnimator;
     private ObjectAnimator mTopAnimator;
 
@@ -88,6 +88,8 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
                 }
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_RENDER_START:
+                sendDelayHiddenMessage();
+                break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_COMPLETE:
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE:
@@ -106,12 +108,6 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
     @Override
     public void onCustomEvent(int eventCode, Bundle bundle) {
         switch (eventCode) {
-            case UIEventKey.CUSTOM_CODE_CONTROLLER_STATUS_CHANGE:
-                mControllerTopEnable = bundle.getBoolean(EventKey.BOOL_DATA);
-                if (!mControllerTopEnable) {
-                    setTopContainerState(false);
-                }
-                break;
             case UIEventKey.CUSTOM_CODE_REQUEST_TOGGLE_SCREEN:
                 setSwitchScreenIcon(bundle.getBoolean(EventKey.BOOL_DATA));
                 break;

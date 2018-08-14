@@ -127,7 +127,7 @@ public class ComponentContainer extends FrameLayout{
 
     private void removeComponent(IComponent component) {
         removeView(component.getView());
-        component.setComponentEventListener(null);
+        component.destroy();
     }
 
     public void setOnComponentEventListener(IComponentEventListener componentEventListener) {
@@ -174,12 +174,14 @@ public class ComponentContainer extends FrameLayout{
         onComponentEventListener = null;
         internalComponentEventListener = null;
         eventDispatcher = null;
+        stateGetter = null;
         componentManager.forEach(new OnLoopListener() {
             @Override
             public void onEach(IComponent component) {
                 removeComponent(component);
             }
         });
+        componentManager.release();
     }
 
     public boolean isGestureEnable() {

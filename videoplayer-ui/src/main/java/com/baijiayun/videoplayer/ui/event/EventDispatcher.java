@@ -76,6 +76,12 @@ public class EventDispatcher {
         recycleBundle(bundle);
     }
 
+    /**
+     * 给其它component发送事件
+     * @param filter
+     * @param eventCode
+     * @param bundle
+     */
     public void dispatchComponentEvent(IFilter filter, final int eventCode, final Bundle bundle) {
         componentManager.forEach(filter, new OnLoopListener() {
             @Override

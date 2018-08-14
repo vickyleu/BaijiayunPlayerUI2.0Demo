@@ -25,6 +25,8 @@ public interface IComponent {
 
     void bindStateGetter(PlayerStateGetter stateGetter);
 
+    void destroy();
+
     PlayerStateGetter getStateGetter();
 
     View getView();

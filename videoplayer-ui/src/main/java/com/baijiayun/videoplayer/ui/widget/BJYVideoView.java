@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.baijiayun.constant.VideoDefinition;
+import com.baijiayun.download.DownloadModel;
 import com.baijiayun.videoplayer.BJYPlayerView;
 import com.baijiayun.videoplayer.BJYVideoPlayer;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
@@ -22,6 +23,7 @@ import com.baijiayun.videoplayer.listeners.OnPlayerStatusChangeListener;
 import com.baijiayun.videoplayer.listeners.OnPlayingTimeChangeListener;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.player.error.PlayerError;
+import com.baijiayun.videoplayer.render.IRender;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
 import com.baijiayun.videoplayer.listeners.PlayerStateGetter;
@@ -145,6 +147,15 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
     }
 
     /**
+     * 供外部发射自定义事件到各个component
+     * @param eventCode
+     * @param bundle
+     */
+    public void sendCustomEvent(int eventCode, Bundle bundle) {
+        componentContainer.dispatchCustomEvent(eventCode, bundle);
+    }
+
+    /**
      * 设置播放百家云在线视频
      *
      * @param videoId 视频id
@@ -153,6 +164,36 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
     public void setupOnlineVideoWithId(long videoId, String token) {
         bjyVideoPlayer.setupOnlineVideoWithId(videoId, token);
     }
+
+    /**
+     * 设置播放百家云在线视频
+     *
+     * @param videoId   视频id
+     * @param token     需要集成方后端调用百家云后端的API获取
+     * @param encrypted 是否加密
+     */
+    public void setupOnlineVideoWithId(long videoId, String token, boolean encrypted){
+        bjyVideoPlayer.setupOnlineVideoWithId(videoId, token, encrypted);
+    }
+
+    /**
+     * 设置播放本地文件路径
+     *
+     * @param path 视频文件绝对路径
+     */
+    public void setupLocalVideoWithFilePath(String path){
+        bjyVideoPlayer.setupLocalVideoWithFilePath(path);
+    }
+
+    /**
+     * 设置播放百家云下载的本地视频
+     *
+     * @param downloadModel 百家云下载的model
+     */
+    public void setupLocalVideoWithDownloadModel(DownloadModel downloadModel){
+        bjyVideoPlayer.setupLocalVideoWithDownloadModel(downloadModel);
+    }
+
 
     /**
      * 开始播放
@@ -177,6 +218,10 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.pause();
     }
 
+    /**
+     * 快进/快退到指定时间
+     * @param time
+     */
     public void seek(int time) {
         bjyVideoPlayer.seek(time);
     }
@@ -190,36 +235,56 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.setPlayRate(playRate);
     }
 
-    public void sendCustomEvent(int eventCode, Bundle bundle) {
-        componentContainer.dispatchCustomEvent(eventCode, bundle);
-    }
-
+    /**
+     * 获取当前播放器的状态
+     * @return
+     */
     @Override
     public PlayerStatus getPlayerStatus() {
         return bjyVideoPlayer.getPlayerStatus();
     }
 
+    /**
+     * 获取当前播放进度
+     * @return
+     */
     @Override
     public int getCurrentPosition() {
         return bjyVideoPlayer.getCurrentPosition();
     }
 
+    /**
+     * 获取总时长
+     * @return
+     */
     @Override
     public int getDuration() {
         return bjyVideoPlayer.getDuration();
     }
 
+    /**
+     * 获取视频信息
+     * @return
+     */
     @Nullable
     @Override
     public BJYVideoInfo getVideoInfo() {
         return bjyVideoPlayer.getVideoInfo();
     }
 
+    /**
+     * 获取缓冲百分比
+     * @return
+     */
     @Override
     public int getBufferPercentage() {
         return bjyVideoPlayer.getBufferPercentage();
     }
 
+    /**
+     * 获取播放倍速
+     * @return
+     */
     @Override
     public float getPlayRate() {
         return bjyVideoPlayer.getPlayRate();
@@ -245,7 +310,23 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.setUserInfo(userName, userIdentity);
     }
 
+    /**
+     * 使用surfaceview播放视频
+     */
+    public void setRenderWithSurfaceView(){
+        bjyPlayerView.setRenderType(IRender.RENDER_TYPE_SURFACE_VIEW);
+    }
 
+    /**
+     * 使用textureview播放视频
+     */
+    public void setRenderWithTextureView(){
+        bjyPlayerView.setRenderType(IRender.RENDER_TYPE_TEXTURE_VIEW);
+    }
+
+    /**
+     * 回收资源
+     */
     public void onDestroy(){
         bjyVideoPlayer.release();
         componentEventListener = null;

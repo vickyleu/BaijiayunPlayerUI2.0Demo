@@ -80,6 +80,14 @@ public class ComponentManager {
     }
 
     /**
+     * 释放资源
+     */
+    public void release(){
+        componentMap.clear();
+        componentChangeListeners.clear();
+    }
+
+    /**
      * 默认组合的组件
      * @param context
      */

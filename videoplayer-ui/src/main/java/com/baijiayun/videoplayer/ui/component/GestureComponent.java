@@ -96,12 +96,6 @@ public class GestureComponent extends BaseComponent implements OnTouchGestureLis
         });
     }
 
-    @Override
-    public void onPlayerEvent(int eventCode, Bundle bundle) {
-        super.onPlayerEvent(eventCode, bundle);
-
-    }
-
     private void onProgressSlide(float percent) {
         int position = getStateGetter().getCurrentPosition();
         int duration = getStateGetter().getDuration();

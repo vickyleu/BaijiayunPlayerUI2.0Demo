@@ -2,6 +2,7 @@ package com.baijiayun.videoplayer.ui.event;
 
 /**
  * Created by yongjiaming on 2018/8/7
+ *
  */
 
 public class UIEventKey {
@@ -17,8 +18,6 @@ public class UIEventKey {
     public static final String KEY_INT_TOTAL_TIME = "total_time";
     public static final String KEY_INT_BUFFER_PERCENT = "buffer_percent";
     public static final String KEY_PLAYER_STATUS_CHANGE = "status_change";
-
-    public static final String KEY_PRIVATE_EVENT = "private_event";
 
     /***************Custom Code*******************/
     //controller status change

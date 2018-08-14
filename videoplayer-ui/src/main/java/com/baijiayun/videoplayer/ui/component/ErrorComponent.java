@@ -51,7 +51,6 @@ public class ErrorComponent extends BaseComponent {
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
         switch (eventCode) {
-
             default:
                 break;
         }

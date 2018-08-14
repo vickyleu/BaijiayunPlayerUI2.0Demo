@@ -16,6 +16,7 @@ import com.baijiayun.videoplayer.listeners.PlayerStateGetter;
 public abstract class BaseComponent implements IComponent, View.OnAttachStateChangeListener{
 
     private View view;
+    //当前组件的唯一标识
     protected String key;
     private Context mContext;
     private IComponentEventListener componentEventListener;
@@ -65,6 +66,18 @@ public abstract class BaseComponent implements IComponent, View.OnAttachStateCha
     }
 
     @Override
+    public void destroy() {
+        view.removeOnAttachStateChangeListener(this);
+        if(componentEventListener != null){
+            componentEventListener = null;
+        }
+        if(stateGetter != null){
+            stateGetter = null;
+        }
+        mContext = null;
+    }
+
+    @Override
     public PlayerStateGetter getStateGetter() {
         return stateGetter;
     }
@@ -100,6 +113,11 @@ public abstract class BaseComponent implements IComponent, View.OnAttachStateCha
 
     }
 
+    /**
+     * 播放器正常事件回调
+     * @param eventCode
+     * @param bundle
+     */
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
 
@@ -110,6 +128,11 @@ public abstract class BaseComponent implements IComponent, View.OnAttachStateCha
 
     }
 
+    /**
+     * 播放器报错回调
+     * @param eventCode 事件code
+     * @param bundle
+     */
     @Override
     public void onErrorEvent(int eventCode, Bundle bundle) {
 

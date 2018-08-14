@@ -34,12 +34,11 @@ import java.util.List;
 public class MenuComponent extends BaseComponent implements OnTouchGestureListener{
 
     private LinearLayout menuLl;
-    private TextView rateTv;
     private TextView definitionTv;
     private RecyclerView recyclerView;
     private RelativeLayout recyclerViewLl;
-    //是否显示menu
-    private boolean isShowMenu;
+    //默认横屏显示菜单项
+    private boolean isLandscape;
     private List<VideoDefinition> definitionItemList = new ArrayList<>();
     private List<Rate> rateList = new ArrayList<>();
     private DefinitionAdapter definitionAdapter;
@@ -60,7 +59,7 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
     @Override
     protected void onInitView() {
         menuLl = findViewById(R.id.bjplayer_center_video_functions_ll);
-        rateTv = findViewById(R.id.bjplayer_center_video_functions_rate_tv);
+        TextView rateTv = findViewById(R.id.bjplayer_center_video_functions_rate_tv);
         definitionTv = findViewById(R.id.bjplayer_center_video_functions_frame_tv);
         recyclerView = findViewById(R.id.rv_bjplayer);
         recyclerViewLl = findViewById(R.id.bjplayer_rv_ll);
@@ -94,7 +93,7 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
         switch (eventCode) {
             case UIEventKey.CUSTOM_CODE_REQUEST_TOGGLE_SCREEN:
                 //横屏才显示菜单项
-                isShowMenu = bundle.getBoolean(EventKey.BOOL_DATA);
+                isLandscape = bundle.getBoolean(EventKey.BOOL_DATA);
                 updateUI();
                 break;
         }
@@ -117,8 +116,8 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
     }
 
     private void updateUI() {
-        setComponentVisibility(isShowMenu ? View.VISIBLE : View.GONE);
-        menuLl.setVisibility(isShowMenu ? View.VISIBLE : View.GONE);
+        setComponentVisibility(isLandscape ? View.VISIBLE : View.GONE);
+        menuLl.setVisibility(isLandscape ? View.VISIBLE : View.GONE);
     }
 
     private void initAdapter() {
@@ -128,7 +127,6 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
             public void onItemClick(View view, int index) {
                 notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_SET_DEFINITION, BundlePool.obtain(definitionItemList.get(index)));
                 definitionTv.setText(Utils.getDefinitionInString(getContext(), definitionItemList.get(index)));
-                //TODO 隐藏动画
                 recyclerViewLl.setVisibility(View.GONE);
                 menuLl.setVisibility(View.VISIBLE);
             }
@@ -138,7 +136,6 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
             @Override
             public void onItemClick(View view, int index) {
                 notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_SET_RATE, BundlePool.obtain(rateList.get(index).rate));
-                //TODO 隐藏动画
                 recyclerViewLl.setVisibility(View.GONE);
                 menuLl.setVisibility(View.VISIBLE);
             }
@@ -155,7 +152,6 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
 
     @Override
     public void onSingleTapUp(MotionEvent event) {
-        //TODO 隐藏侧边栏
         setComponentVisibility(getView().getVisibility() == View.VISIBLE ? View.GONE: View.VISIBLE);
     }
 

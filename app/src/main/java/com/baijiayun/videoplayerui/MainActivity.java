@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         videoView.initPlayer(new VideoPlayerFactory.Builder()
                 //后台暂停播放
                 .setSupportBackgroundAudio(false)
+                //关闭循环播放
+                .setSupportLooping(false)
                 //开启记忆播放
                 .setSupportBreakPointPlay(true, this)
                 //绑定activity生命周期
