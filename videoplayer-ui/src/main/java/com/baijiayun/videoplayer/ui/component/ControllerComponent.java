@@ -73,24 +73,27 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
         switch (eventCode) {
-            case OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET:
-                mBufferPercentage = 0;
-                updateUI(0, 0);
-                String videoTitle = bundle.getString(EventKey.STRING_DATA1, "");
-                setTitle(videoTitle);
-                break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE:
-                PlayerStatus status = (PlayerStatus) bundle.getSerializable(UIEventKey.KEY_PLAYER_STATUS_CHANGE);
-                if (status == PlayerStatus.STATE_PAUSED) {
-                    mStateIcon.setSelected(true);
-                } else if (status == PlayerStatus.STATE_STARTED) {
-                    mStateIcon.setSelected(false);
+                PlayerStatus status = (PlayerStatus) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
+                if(status == null){
+                    break;
                 }
-                break;
-            case OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_RENDER_START:
-                sendDelayHiddenMessage();
-                break;
-            case OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_COMPLETE:
+                switch (status){
+                    case STATE_PAUSED:
+                        mStateIcon.setSelected(true);
+                        break;
+                    case STATE_STARTED:
+                        mStateIcon.setSelected(false);
+                        sendDelayHiddenMessage();
+                        break;
+                    case STATE_INITIALIZED:
+                        mBufferPercentage = 0;
+                        updateUI(0, 0);
+                        if(getStateGetter().getVideoInfo() != null){
+                            setTitle(getStateGetter().getVideoInfo().getVideoTitle());
+                        }
+                        break;
+                }
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE:
                 int currentTime = bundle.getInt(UIEventKey.KEY_INT_CURRENT_TIME);

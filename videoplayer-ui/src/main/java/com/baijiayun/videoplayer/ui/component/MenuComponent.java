@@ -104,7 +104,7 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
         super.onPlayerEvent(eventCode, bundle);
         switch (eventCode) {
             //重新设置视频源
-            case OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET:
+            case OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE:
                 BJYVideoInfo videoInfo = getStateGetter().getVideoInfo();
                 if (videoInfo != null) {
                     definitionItemList = videoInfo.getSupportedDefinitionList();

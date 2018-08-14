@@ -67,9 +67,4 @@ public class ErrorComponent extends BaseComponent {
         errorMsgTv.setText(bundle.getString(EventKey.STRING_DATA));
         errorCodeTv.setText("[" + eventCode + "]");
     }
-
-    @Override
-    public void onCustomEvent(int eventCode, Bundle bundle) {
-
-    }
 }

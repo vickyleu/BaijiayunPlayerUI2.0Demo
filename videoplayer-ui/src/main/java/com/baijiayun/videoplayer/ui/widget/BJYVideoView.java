@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -21,6 +22,7 @@ import com.baijiayun.videoplayer.listeners.OnBufferedUpdateListener;
 import com.baijiayun.videoplayer.listeners.OnPlayerErrorListener;
 import com.baijiayun.videoplayer.listeners.OnPlayerStatusChangeListener;
 import com.baijiayun.videoplayer.listeners.OnPlayingTimeChangeListener;
+import com.baijiayun.videoplayer.listeners.OnSeekCompleteListener;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.player.error.PlayerError;
 import com.baijiayun.videoplayer.render.IRender;
@@ -30,7 +32,7 @@ import com.baijiayun.videoplayer.listeners.PlayerStateGetter;
 
 /**
  * Created by yongjiaming on 2018/8/6
- * <p>
+ *
  * 带ui的播放器组件
  */
 
@@ -65,17 +67,13 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         componentContainer.setOnComponentEventListener(internalComponentEventListener);
     }
 
+    /**
+     * 初始化播放器
+     * @param builder
+     */
     public void initPlayer(VideoPlayerFactory.Builder builder) {
         bjyVideoPlayer = builder.build();
-
         bjyVideoPlayer.bindPlayerView(bjyPlayerView);
-
-        bjyVideoPlayer.setOnPlayerEventListener(new OnPlayerEventListener() {
-            @Override
-            public void onPlayerEvent(int eventCode, Bundle bundle) {
-                componentContainer.dispatchPlayEvent(eventCode, bundle);
-            }
-        });
 
         bjyVideoPlayer.setOnPlayerErrorListener(new OnPlayerErrorListener() {
             @Override
@@ -108,9 +106,15 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.setOnPlayerStatusChangeListener(new OnPlayerStatusChangeListener() {
             @Override
             public void onStatusChange(PlayerStatus status) {
-                Bundle bundle = BundlePool.obtain();
-                bundle.putSerializable(UIEventKey.KEY_PLAYER_STATUS_CHANGE, status);
+                Bundle bundle = BundlePool.obtain(status);
                 componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE, bundle);
+            }
+        });
+
+        bjyVideoPlayer.setOnSeekComplementListener(new OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete() {
+                componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_COMPLETE, null);
             }
         });
     }

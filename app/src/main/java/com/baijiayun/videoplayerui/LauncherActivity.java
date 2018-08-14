@@ -13,6 +13,10 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.baijiayun.videoplayer.PlayerConstants;
+import com.baijiayun.videoplayer.ui.component.ComponentManager;
+import com.baijiayun.videoplayer.ui.component.ControllerComponent;
+import com.baijiayun.videoplayer.ui.component.LoadingComponent;
+import com.baijiayun.videoplayer.ui.event.UIEventKey;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -38,6 +42,7 @@ public class LauncherActivity extends AppCompatActivity {
         productRadio = findViewById(R.id.rg_env_product);
         recoverStatus();
         initListener();
+        //initComponentManager();
     }
 
     private void recoverStatus(){
@@ -94,5 +99,11 @@ public class LauncherActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void initComponentManager(){
+        ComponentManager.get().release();
+        ComponentManager.get().addComponent(UIEventKey.KEY_LOADING_COMPONENT, new LoadingComponent(LauncherActivity.this));
+        ComponentManager.get().addComponent(UIEventKey.KEY_CONTROLLER_COMPONENT, new ControllerComponent(LauncherActivity.this));
     }
 }
