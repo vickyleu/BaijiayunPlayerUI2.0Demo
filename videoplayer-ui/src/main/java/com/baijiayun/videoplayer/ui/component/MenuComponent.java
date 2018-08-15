@@ -18,11 +18,12 @@ import com.baijiayun.videoplayer.bean.BJYVideoInfo;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
+import com.baijiayun.videoplayer.player.PlayerStatus;
+import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.Utils;
 import com.baijiayun.videoplayer.ui.bean.Rate;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.OnTouchGestureListener;
-import com.baijiayun.videoplayerui.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,11 +106,14 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
         switch (eventCode) {
             //重新设置视频源
             case OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE:
-                BJYVideoInfo videoInfo = getStateGetter().getVideoInfo();
-                if (videoInfo != null) {
-                    definitionItemList = videoInfo.getSupportedDefinitionList();
-                    definitionTv.setText(Utils.getDefinitionInString(getContext(), videoInfo.getDefinition()));
-                    definitionAdapter.notifyDataSetChanged();
+                PlayerStatus playerStatus = (PlayerStatus) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
+                if(playerStatus != null && playerStatus == PlayerStatus.STATE_INITIALIZED){
+                    BJYVideoInfo videoInfo = getStateGetter().getVideoInfo();
+                    if (videoInfo != null) {
+                        definitionItemList = videoInfo.getSupportedDefinitionList();
+                        definitionTv.setText(Utils.getDefinitionInString(getContext(), videoInfo.getDefinition()));
+                        definitionAdapter.notifyDataSetChanged();
+                    }
                 }
                 break;
         }

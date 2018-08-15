@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.baijiayun.videoplayer.event.EventKey;
+import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
-import com.baijiayun.videoplayerui.R;
 
 /**
  * Created by yongjiaming on 2018/8/7

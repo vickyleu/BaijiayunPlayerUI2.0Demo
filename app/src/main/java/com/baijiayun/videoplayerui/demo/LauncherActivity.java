@@ -1,4 +1,4 @@
-package com.baijiayun.videoplayerui;
+package com.baijiayun.videoplayerui.demo;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

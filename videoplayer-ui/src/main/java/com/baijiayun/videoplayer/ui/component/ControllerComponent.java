@@ -18,10 +18,10 @@ import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.player.PlayerStatus;
+import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.OnTouchGestureListener;
 import com.baijiayun.videoplayer.util.Utils;
-import com.baijiayun.videoplayerui.R;
 
 
 /**

@@ -1,18 +1,17 @@
-package com.baijiayun.videoplayerui;
+package com.baijiayun.videoplayerui.demo;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.baijiayun.videoplayer.PlayerConstants;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
-import com.baijiayun.videoplayer.ui.widget.BJYVideoView;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
+import com.baijiayun.videoplayer.ui.widget.BJYVideoView;
 import com.baijiayun.videoplayer.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
                 //后台暂停播放
                 .setSupportBackgroundAudio(false)
                 //关闭循环播放
-                .setSupportLooping(false)
+                .setSupportLooping(true)
                 //开启记忆播放
                 .setSupportBreakPointPlay(true, this)
                 //绑定activity生命周期

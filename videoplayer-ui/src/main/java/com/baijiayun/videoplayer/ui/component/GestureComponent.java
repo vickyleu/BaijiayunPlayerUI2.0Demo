@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -14,11 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baijiayun.videoplayer.event.BundlePool;
-import com.baijiayun.videoplayer.event.EventKey;
+import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.OnTouchGestureListener;
 import com.baijiayun.videoplayer.util.Utils;
-import com.baijiayun.videoplayerui.R;
 
 /**
  * Created by yongjiaming on 2018/8/7

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -23,12 +22,12 @@ import com.baijiayun.videoplayer.listeners.OnPlayerErrorListener;
 import com.baijiayun.videoplayer.listeners.OnPlayerStatusChangeListener;
 import com.baijiayun.videoplayer.listeners.OnPlayingTimeChangeListener;
 import com.baijiayun.videoplayer.listeners.OnSeekCompleteListener;
+import com.baijiayun.videoplayer.listeners.PlayerStateGetter;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.player.error.PlayerError;
 import com.baijiayun.videoplayer.render.IRender;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
-import com.baijiayun.videoplayer.listeners.PlayerStateGetter;
 
 /**
  * Created by yongjiaming on 2018/8/6
@@ -87,6 +86,7 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.setOnPlayingTimeChangeListener(new OnPlayingTimeChangeListener() {
             @Override
             public void onPlayingTimeChange(int currentTime, int duration) {
+                //TODO 只通知到controller component
                 Bundle bundle = BundlePool.obtain();
                 bundle.putInt(UIEventKey.KEY_INT_CURRENT_TIME, currentTime);
                 bundle.putInt(UIEventKey.KEY_INT_TOTAL_TIME, duration);
@@ -97,6 +97,7 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.setOnBufferUpdateListener(new OnBufferedUpdateListener() {
             @Override
             public void onBufferedPercentageChange(int bufferedPercentage) {
+                //TODO 只通知到controller component
                 Bundle bundle = BundlePool.obtain();
                 bundle.putInt(UIEventKey.KEY_INT_BUFFER_PERCENT, bufferedPercentage);
                 componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE, bundle);

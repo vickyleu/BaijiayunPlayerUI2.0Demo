@@ -3,7 +3,6 @@ package com.baijiayun.videoplayer.ui;
 import android.content.Context;
 
 import com.baijiayun.constant.VideoDefinition;
-import com.baijiayun.videoplayerui.R;
 
 /**
  * Created by yongjiaming on 2018/8/13 14:29
