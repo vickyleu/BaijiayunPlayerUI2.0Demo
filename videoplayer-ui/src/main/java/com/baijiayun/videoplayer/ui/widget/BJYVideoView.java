@@ -88,10 +88,8 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.setOnPlayingTimeChangeListener(new OnPlayingTimeChangeListener() {
             @Override
             public void onPlayingTimeChange(int currentTime, int duration) {
-                //TODO 只通知到controller component
-                Bundle bundle = BundlePool.obtain();
-                bundle.putInt(UIEventKey.KEY_INT_CURRENT_TIME, currentTime);
-                bundle.putInt(UIEventKey.KEY_INT_TOTAL_TIME, duration);
+                //只通知到controller component
+                Bundle bundle = BundlePool.obtainPrivate(UIEventKey.KEY_CONTROLLER_COMPONENT, currentTime);
                 componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE, bundle);
             }
         });
@@ -99,9 +97,8 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.setOnBufferUpdateListener(new OnBufferedUpdateListener() {
             @Override
             public void onBufferedPercentageChange(int bufferedPercentage) {
-                //TODO 只通知到controller component
-                Bundle bundle = BundlePool.obtain();
-                bundle.putInt(UIEventKey.KEY_INT_BUFFER_PERCENT, bufferedPercentage);
+                //只通知到controller component
+                Bundle bundle = BundlePool.obtainPrivate(UIEventKey.KEY_CONTROLLER_COMPONENT, bufferedPercentage);
                 componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE, bundle);
             }
         });

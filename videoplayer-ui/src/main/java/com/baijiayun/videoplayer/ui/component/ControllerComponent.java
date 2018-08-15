@@ -96,12 +96,11 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
                 }
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE:
-                int currentTime = bundle.getInt(UIEventKey.KEY_INT_CURRENT_TIME);
-                int totalTime = bundle.getInt(UIEventKey.KEY_INT_TOTAL_TIME);
-                updateUI(currentTime, totalTime);
+                int currentTime = bundle.getInt(EventKey.INT_DATA);
+                updateUI(currentTime, getStateGetter().getDuration());
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE:
-                setSecondProgress(bundle.getInt(UIEventKey.KEY_INT_BUFFER_PERCENT));
+                setSecondProgress(bundle.getInt(EventKey.INT_DATA));
                 break;
             default:
                 break;
