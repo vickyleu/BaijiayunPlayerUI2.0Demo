@@ -59,18 +59,11 @@ public class LoadingComponent extends BaseComponent {
                         break;
                 }
                 break;
-            case OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_COMPLETE:
-                setLoadingState(false);
-                break;
-        }
-    }
-
-    @Override
-    public void onComponentEvent(int eventCode, Bundle bundle) {
-        super.onComponentEvent(eventCode, bundle);
-        switch (eventCode){
-            case UIEventKey.CUSTOM_CODE_REQUEST_SEEK:
+            case UIEventKey.PLAYER_CODE_BUFFERING_START:
                 setLoadingState(true);
+                break;
+            case UIEventKey.PLAYER_CODE_BUFFERING_END:
+                setLoadingState(false);
                 break;
         }
     }

@@ -7,7 +7,7 @@ import android.view.View;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponent;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
-import com.baijiayun.videoplayer.listeners.PlayerStateGetter;
+import com.baijiayun.videoplayer.ui.listener.PlayerStateGetter;
 
 /**
  * Created by yongjiaming on 2018/8/7

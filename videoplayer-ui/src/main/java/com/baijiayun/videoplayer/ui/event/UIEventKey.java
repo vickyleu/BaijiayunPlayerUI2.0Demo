@@ -19,6 +19,7 @@ public class UIEventKey {
     public static final String KEY_INT_BUFFER_PERCENT = "buffer_percent";
     public static final String KEY_PLAYER_STATUS_CHANGE = "status_change";
 
+
     /***************Custom Code*******************/
     //controller status change
     public static final int CUSTOM_CODE_CONTROLLER_STATUS_CHANGE = -80001;
@@ -30,4 +31,6 @@ public class UIEventKey {
     public static final int CUSTOM_CODE_REQUEST_BACK = -80007;
     public static final int CUSTOM_CODE_REQUEST_SET_RATE = -80008;
     public static final int CUSTOM_CODE_REQUEST_SET_DEFINITION = -80009;
+    public static final int PLAYER_CODE_BUFFERING_START = -80010;
+    public static final int PLAYER_CODE_BUFFERING_END = -80011;
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -18,11 +19,12 @@ import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.listeners.OnBufferedUpdateListener;
+import com.baijiayun.videoplayer.listeners.OnBufferingListener;
 import com.baijiayun.videoplayer.listeners.OnPlayerErrorListener;
 import com.baijiayun.videoplayer.listeners.OnPlayerStatusChangeListener;
 import com.baijiayun.videoplayer.listeners.OnPlayingTimeChangeListener;
 import com.baijiayun.videoplayer.listeners.OnSeekCompleteListener;
-import com.baijiayun.videoplayer.listeners.PlayerStateGetter;
+import com.baijiayun.videoplayer.ui.listener.PlayerStateGetter;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.player.error.PlayerError;
 import com.baijiayun.videoplayer.render.IRender;
@@ -112,10 +114,17 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
             }
         });
 
-        bjyVideoPlayer.setOnSeekComplementListener(new OnSeekCompleteListener() {
+        bjyVideoPlayer.setOnBufferingListener(new OnBufferingListener() {
             @Override
-            public void onSeekComplete() {
-                componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_COMPLETE, null);
+            public void onBufferingStart() {
+                Log.d("bjy", "onBufferingStart invoke");
+                componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_START, null);
+            }
+
+            @Override
+            public void onBufferingEnd() {
+                Log.d("bjy", "onBufferingEnd invoke");
+                componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_END, null);
             }
         });
     }
