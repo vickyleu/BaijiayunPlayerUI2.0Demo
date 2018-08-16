@@ -57,7 +57,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        videoView.setupOnlineVideoWithId(getIntent().getLongExtra("videoId", 0L), getIntent().getStringExtra("token"));
+        if(getIntent().getBooleanExtra("isOffline", false)){
+            videoView.setupLocalVideoWithFilePath(getIntent().getStringExtra("videoPath"));
+        } else{
+            videoView.setupOnlineVideoWithId(getIntent().getLongExtra("videoId", 0L), getIntent().getStringExtra("token"));
+        }
         videoView.play();
     }
 

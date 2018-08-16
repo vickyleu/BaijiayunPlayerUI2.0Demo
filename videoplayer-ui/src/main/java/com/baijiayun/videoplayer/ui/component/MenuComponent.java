@@ -109,10 +109,13 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
                 PlayerStatus playerStatus = (PlayerStatus) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
                 if(playerStatus != null && playerStatus == PlayerStatus.STATE_INITIALIZED){
                     BJYVideoInfo videoInfo = getStateGetter().getVideoInfo();
-                    if (videoInfo != null) {
+                    if (videoInfo != null && videoInfo.getSupportedDefinitionList() != null) {
                         definitionItemList = videoInfo.getSupportedDefinitionList();
                         definitionTv.setText(Utils.getDefinitionInString(getContext(), videoInfo.getDefinition()));
                         definitionAdapter.notifyDataSetChanged();
+                    } else{
+                        //离线播放隐藏
+                        definitionTv.setVisibility(View.GONE);
                     }
                 }
                 break;

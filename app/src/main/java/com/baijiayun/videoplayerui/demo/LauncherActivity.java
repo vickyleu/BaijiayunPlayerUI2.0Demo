@@ -25,8 +25,10 @@ public class LauncherActivity extends AppCompatActivity {
     private final String ENVIRONMENT = "environment";
 
     private Button playBtn;
+    private Button offlinePlayBtn;
     private EditText videoIdEt;
     private EditText videoTokenEt;
+    private EditText videoPathEt;
     private RadioButton testRadion, betaRadion, productRadio;
     SharedPreferences sharedPreferences;
 
@@ -35,8 +37,10 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
         playBtn = findViewById(R.id.play_btn);
+        offlinePlayBtn = findViewById(R.id.offline_play_btn);
         videoIdEt = findViewById(R.id.videoId_et);
         videoTokenEt = findViewById(R.id.video_token_et);
+        videoPathEt = findViewById(R.id.video_path_et);
         testRadion = findViewById(R.id.rg_env_test);
         betaRadion = findViewById(R.id.rg_env_beta);
         productRadio = findViewById(R.id.rg_env_product);
@@ -61,6 +65,7 @@ public class LauncherActivity extends AppCompatActivity {
         } else{
             productRadio.setChecked(true);
         }
+        videoPathEt.setText(sharedPreferences.getString("videoPath", ""));
     }
 
     private void initListener(){
@@ -80,6 +85,7 @@ public class LauncherActivity extends AppCompatActivity {
                 Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
                 intent.putExtra(VIDEO_ID, Long.parseLong(videoId));
                 intent.putExtra(TOKEN, videoToken);
+                intent.putExtra("isOffline", false);
                 startActivity(intent);
             }
         });
@@ -99,7 +105,20 @@ public class LauncherActivity extends AppCompatActivity {
                 }
             }
         });
+
+        offlinePlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String videoPath = videoPathEt.getText().toString();
+                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+                intent.putExtra("videoPath", videoPath);
+                intent.putExtra("isOffline", true);
+                startActivity(intent);
+                sharedPreferences.edit().putString("videoPath", videoPath).apply();
+            }
+        });
     }
+
 
     private void initComponentManager(){
         ComponentManager.get().release();

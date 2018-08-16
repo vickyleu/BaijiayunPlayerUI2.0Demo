@@ -54,7 +54,21 @@
         android:id="@+id/play_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="开始播放"
+        android:text="在线播放"
+        />
+
+    <EditText
+        android:id="@+id/video_path_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="视频路径"
+        />
+
+    <Button
+        android:id="@+id/offline_play_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="离线播放"
         />
 
 
