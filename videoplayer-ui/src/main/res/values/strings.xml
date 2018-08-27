@@ -15,4 +15,7 @@
         <item>720P</item>
         <item>1080P</item>
     </array>
+
+    <string name="bjplayer_play_no_wifi">您正在使用非WiFi网络\n播放将产生流量费</string>
+    <string name="bjplayer_still_play">继续播放</string>
 </resources>

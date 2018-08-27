@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
+import com.baijiayun.videoplayer.log.BJLog;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
@@ -54,6 +55,7 @@ public class LoadingComponent extends BaseComponent {
                     case STATE_PAUSED:
                     case STATE_STARTED:
                     case STATE_STOPPED:
+                    case STATE_PREPARED:
                     case STATE_PLAYBACK_COMPLETED:
                         setLoadingState(false);
                         break;
@@ -71,6 +73,15 @@ public class LoadingComponent extends BaseComponent {
     @Override
     public void onErrorEvent(int eventCode, Bundle bundle) {
         setLoadingState(false);
+    }
+
+    @Override
+    public void onCustomEvent(int eventCode, Bundle bundle) {
+        switch (eventCode) {
+            case UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE:
+                setLoadingState(false);
+                break;
+        }
     }
 
     private void setLoadingState(boolean show) {

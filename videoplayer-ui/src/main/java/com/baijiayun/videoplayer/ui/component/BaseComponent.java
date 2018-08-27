@@ -32,7 +32,9 @@ public abstract class BaseComponent implements IComponent, View.OnAttachStateCha
 
     @Override
     public void setComponentVisibility(int visibility) {
-        view.setVisibility(visibility);
+        if(view.getVisibility() != visibility){
+            view.setVisibility(visibility);
+        }
     }
 
     @Override
@@ -87,7 +89,7 @@ public abstract class BaseComponent implements IComponent, View.OnAttachStateCha
     }
 
     public final void requestPlay(Bundle bundle) {
-        notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_REPLAY, bundle);
+        notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PLAY, bundle);
     }
 
     public final void requestSeek(Bundle bundle) {

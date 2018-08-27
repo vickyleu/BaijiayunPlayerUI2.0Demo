@@ -1,8 +1,9 @@
-package com.baijiayun.videoplayer.ui;
+package com.baijiayun.videoplayer.ui.utils;
 
 import android.content.Context;
 
 import com.baijiayun.constant.VideoDefinition;
+import com.baijiayun.videoplayer.ui.R;
 
 /**
  * Created by yongjiaming on 2018/8/13 14:29
@@ -31,5 +32,7 @@ public class Utils {
                 return defArray[2];
         }
     }
+
+
 
 }

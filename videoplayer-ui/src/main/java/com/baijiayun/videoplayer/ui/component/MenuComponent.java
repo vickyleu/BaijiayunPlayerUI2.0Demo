@@ -2,6 +2,8 @@ package com.baijiayun.videoplayer.ui.component;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +22,7 @@ import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
-import com.baijiayun.videoplayer.ui.Utils;
+import com.baijiayun.videoplayer.ui.utils.Utils;
 import com.baijiayun.videoplayer.ui.bean.Rate;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.OnTouchGestureListener;
@@ -44,6 +46,17 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
     private List<Rate> rateList = new ArrayList<>();
     private DefinitionAdapter definitionAdapter;
     private RateAdapter rateAdapter;
+
+    private static final int HIDE_MENU = 1001;
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if(msg.what == HIDE_MENU){
+                getView().setVisibility(View.GONE);
+            }
+            return false;
+        }
+    });
 
     public MenuComponent(Context context) {
         super(context);
@@ -118,6 +131,9 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
                         definitionTv.setVisibility(View.GONE);
                     }
                 }
+                if(playerStatus != null && playerStatus == PlayerStatus.STATE_STARTED){
+                    autoHideMenu();
+                }
                 break;
         }
     }
@@ -159,7 +175,12 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
 
     @Override
     public void onSingleTapUp(MotionEvent event) {
+        if(recyclerViewLl.getVisibility() == View.VISIBLE){
+           recyclerViewLl.setVisibility(View.GONE);
+           menuLl.setVisibility(View.VISIBLE);
+        }
         setComponentVisibility(getView().getVisibility() == View.VISIBLE ? View.GONE: View.VISIBLE);
+        autoHideMenu();
     }
 
     @Override
@@ -180,6 +201,11 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
     @Override
     public void onEndGesture() {
 
+    }
+
+    private void autoHideMenu(){
+        handler.removeMessages(HIDE_MENU);
+        handler.sendEmptyMessageDelayed(HIDE_MENU, 5000);
     }
 
     interface OnRvItemClickListener {

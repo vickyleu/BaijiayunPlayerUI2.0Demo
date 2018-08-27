@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
+import com.baijiayun.videoplayer.log.BJLog;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
@@ -100,6 +101,7 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
                 updateUI(currentTime, getStateGetter().getDuration());
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE:
+                BJLog.d("bjy", "buffering update " + bundle.getInt(EventKey.INT_DATA));
                 setSecondProgress(bundle.getInt(EventKey.INT_DATA));
                 break;
             default:
@@ -112,6 +114,10 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
         switch (eventCode) {
             case UIEventKey.CUSTOM_CODE_REQUEST_TOGGLE_SCREEN:
                 setSwitchScreenIcon(bundle.getBoolean(EventKey.BOOL_DATA));
+                break;
+            case UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE:
+                mStateIcon.setSelected(false);
+                notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PAUSE, null);
                 break;
             default:
                 break;
