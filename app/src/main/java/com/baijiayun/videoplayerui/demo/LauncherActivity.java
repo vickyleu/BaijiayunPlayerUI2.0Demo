@@ -15,7 +15,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.baijiahulian.common.permission.AppPermissions;
-import com.baijiayun.videoplayer.PlayerConstants;
+import com.baijiayun.constant.PlayerConstants;
+import com.baijiayun.playback.context.LPConstants;
+import com.baijiayun.videoplayer.log.BJLog;
 import com.baijiayun.videoplayer.ui.component.ComponentManager;
 import com.baijiayun.videoplayer.ui.component.ControllerComponent;
 import com.baijiayun.videoplayer.ui.component.LoadingComponent;
@@ -55,6 +57,8 @@ public class LauncherActivity extends AppCompatActivity {
         recoverStatus();
         initListener();
         //initComponentManager();
+
+        BJLog.LOG_OPEN = true;
     }
 
     private void recoverStatus(){
@@ -65,12 +69,14 @@ public class LauncherActivity extends AppCompatActivity {
         videoTokenEt.setText(token);
         //默认正式服
         int env = sharedPreferences.getInt(ENVIRONMENT, 2);
-        PlayerConstants.DEPLOY_TYPE = env;
         if(env == 0){
+            PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
             testRadion.setChecked(true);
         } else if(env == 1){
+            PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
             betaRadion.setChecked(true);
         } else{
+            PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
             productRadio.setChecked(true);
         }
         videoPathEt.setText(sharedPreferences.getString("videoPath", ""));
@@ -102,13 +108,13 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rg_env_product) {
-                    PlayerConstants.DEPLOY_TYPE = 2;
+                    PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
                     sharedPreferences.edit().putInt(ENVIRONMENT, 2).apply();
                 } else if (checkedId == R.id.rg_env_beta) {
-                    PlayerConstants.DEPLOY_TYPE = 1;
+                    PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
                     sharedPreferences.edit().putInt(ENVIRONMENT, 1).apply();
                 } else {
-                    PlayerConstants.DEPLOY_TYPE = 0;
+                    PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
                     sharedPreferences.edit().putInt(ENVIRONMENT, 0).apply();
                 }
             }

@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         } else{
             videoView.setupOnlineVideoWithId(getIntent().getLongExtra("videoId", 0L), getIntent().getStringExtra("token"));
         }
-        videoView.play();
     }
 
     @Override

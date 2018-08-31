@@ -10,13 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.baijiayun.constant.VideoDefinition;
 import com.baijiayun.download.DownloadModel;
-import com.baijiayun.videoplayer.BJYPlayerView;
 import com.baijiayun.videoplayer.BJYVideoPlayer;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.bean.BJYVideoInfo;
@@ -36,6 +34,7 @@ import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
 import com.baijiayun.videoplayer.ui.listener.PlayerStateGetter;
 import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
+import com.baijiayun.videoplayer.widget.BJYPlayerView;
 
 /**
  * Created by yongjiaming on 2018/8/6
@@ -43,7 +42,7 @@ import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
  * 带ui的播放器组件
  */
 
-public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View.OnLayoutChangeListener{
+public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
 
     private static final String TAG = "BJYVideoView";
 
@@ -56,6 +55,9 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
     //默认不允许移动网络播放
     private boolean enablePlayWithMobileNetwork = false;
     private NetChangeBroadcastReceiver mBroadcastReceiver;
+    private long videoId;
+    private String token;
+    private boolean encrypted;
 
     public BJYVideoView(@NonNull Context context) {
         this(context, null);
@@ -79,8 +81,6 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
                 ViewGroup.LayoutParams.MATCH_PARENT));
         componentContainer.setStateGetter(this);
         componentContainer.setOnComponentEventListener(internalComponentEventListener);
-
-        addOnLayoutChangeListener(this);
     }
 
     /**
@@ -130,13 +130,13 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
         bjyVideoPlayer.setOnBufferingListener(new OnBufferingListener() {
             @Override
             public void onBufferingStart() {
-                Log.d("bjy", "onBufferingStart invoke");
+                BJLog.d("bjy", "onBufferingStart invoke");
                 componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_START, null);
             }
 
             @Override
             public void onBufferingEnd() {
-                Log.d("bjy", "onBufferingEnd invoke");
+                BJLog.d("bjy", "onBufferingEnd invoke");
                 componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_END, null);
             }
         });
@@ -164,7 +164,12 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
                     break;
                 case UIEventKey.CUSTOM_CODE_REQUEST_PLAY:
                     enablePlayWithMobileNetwork = true;
-                    play();
+                    //视频未初始化则请求视频地址
+                    if(bjyVideoPlayer.getVideoInfo().getVideoId() == 0){
+                        setupOnlineVideoWithId(videoId, token, encrypted);
+                    } else{
+                        play();
+                    }
                     break;
             }
             if (componentEventListener != null) {
@@ -194,7 +199,7 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
      * @param token   需要集成方后端调用百家云后端的API获取
      */
     public void setupOnlineVideoWithId(long videoId, String token) {
-        bjyVideoPlayer.setupOnlineVideoWithId(videoId, token);
+        setupOnlineVideoWithId(videoId, token, false);
     }
 
     /**
@@ -205,7 +210,17 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
      * @param encrypted 是否加密
      */
     public void setupOnlineVideoWithId(long videoId, String token, boolean encrypted) {
-        bjyVideoPlayer.setupOnlineVideoWithId(videoId, token, encrypted);
+        this.videoId = videoId;
+        this.token = token;
+        this.encrypted = encrypted;
+        if (useDefaultNetworkListener) {
+            registerNetChangeReceiver();
+        }
+        if(!enablePlayWithMobileNetwork && NetworkUtils.isMobile(NetworkUtils.getNetworkState(getContext()))){
+            sendCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
+        } else{
+            bjyVideoPlayer.setupOnlineVideoWithId(videoId, token, encrypted);
+        }
     }
 
     /**
@@ -231,18 +246,7 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
      * 开始播放
      */
     public void play() {
-        if(bjyVideoPlayer.isPlayLocalVideo()){
-            bjyVideoPlayer.play();
-            return;
-        }
-        if (useDefaultNetworkListener) {
-            registerNetChangeReceiver();
-        }
-        if(!enablePlayWithMobileNetwork && NetworkUtils.isMobile(NetworkUtils.getNetworkState(getContext()))){
-            sendCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
-        } else{
-            bjyVideoPlayer.play();
-        }
+        bjyVideoPlayer.play();
     }
 
     /**
@@ -251,18 +255,7 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
      * @param startOffset
      */
     public void play(int startOffset) {
-        if(bjyVideoPlayer.isPlayLocalVideo()){
-            bjyVideoPlayer.play(startOffset);
-            return;
-        }
-        if (useDefaultNetworkListener) {
-            registerNetChangeReceiver();
-        }
-        if(!enablePlayWithMobileNetwork && NetworkUtils.isMobile(NetworkUtils.getNetworkState(getContext()))){
-            sendCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
-        } else{
-            bjyVideoPlayer.play(startOffset);
-        }
+        bjyVideoPlayer.play(startOffset);
     }
 
     /**
@@ -395,11 +388,13 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
     }
 
     private void registerNetChangeReceiver() {
-        unregisterNetChangeReceiver();
-        mBroadcastReceiver = new NetChangeBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        getContext().registerReceiver(mBroadcastReceiver, intentFilter);
+        if(mBroadcastReceiver == null){
+            unregisterNetChangeReceiver();
+            mBroadcastReceiver = new NetChangeBroadcastReceiver();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            getContext().registerReceiver(mBroadcastReceiver, intentFilter);
+        }
     }
 
     private void unregisterNetChangeReceiver() {
@@ -413,17 +408,10 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
      * 回收资源
      */
     public void onDestroy() {
-        removeOnLayoutChangeListener(this);
         bjyVideoPlayer.release();
         componentEventListener = null;
         componentContainer.destroy();
         unregisterNetChangeReceiver();
-    }
-
-    @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-        bjyVideoPlayer.updateWatermark();
-        BJLog.d(TAG, "onLayoutChange invoke");
     }
 
     class NetChangeBroadcastReceiver extends BroadcastReceiver {
@@ -431,10 +419,15 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter, View
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
-                if (NetworkUtils.isMobile(NetworkUtils.getNetworkState(context))) {
+                int netState = NetworkUtils.getNetworkState(context);
+                if (!enablePlayWithMobileNetwork && NetworkUtils.isMobile(netState)) {
                     bjyVideoPlayer.pause();
                     componentContainer.dispatchCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
                 }
+//                if(NetworkUtils.isWifiConnected(context)){
+//                    bjyVideoPlayer.play();
+//                    componentContainer.dispatchCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_WIFI, null);
+//                }
             }
         }
     }

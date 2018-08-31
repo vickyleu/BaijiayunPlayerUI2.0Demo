@@ -117,7 +117,6 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
                 break;
             case UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE:
                 mStateIcon.setSelected(false);
-                notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PAUSE, null);
                 break;
             default:
                 break;

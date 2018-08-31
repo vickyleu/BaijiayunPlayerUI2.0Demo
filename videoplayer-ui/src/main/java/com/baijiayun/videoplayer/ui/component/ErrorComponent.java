@@ -52,6 +52,7 @@ public class ErrorComponent extends BaseComponent {
                     return;
                 }
                 switch (playerStatus) {
+                    case STATE_PREPARED:
                     case STATE_STARTED:
                     case STATE_PLAYBACK_COMPLETED:
                         setComponentVisibility(View.GONE);

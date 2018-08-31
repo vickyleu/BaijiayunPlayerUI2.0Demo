@@ -28,5 +28,6 @@ public class UIEventKey {
     public static final int PLAYER_CODE_BUFFERING_START = -80010;
     public static final int PLAYER_CODE_BUFFERING_END = -80011;
     public static final int CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE = -80012;
-    public static final int CUSTOM_CODE_REQUEST_PLAY = -80013;
+    public static final int CUSTOM_CODE_NETWORK_CHANGE_TO_WIFI = -80013;
+    public static final int CUSTOM_CODE_REQUEST_PLAY = -80014;
 }
