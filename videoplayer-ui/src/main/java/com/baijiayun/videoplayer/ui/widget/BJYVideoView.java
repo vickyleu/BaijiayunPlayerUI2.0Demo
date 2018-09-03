@@ -424,6 +424,10 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
                     bjyVideoPlayer.pause();
                     componentContainer.dispatchCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
                 }
+                if(!NetworkUtils.isNetConnected(context)){
+                    bjyVideoPlayer.pause();
+                    componentContainer.dispatchCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_DISCONNETCT, null);
+                }
 //                if(NetworkUtils.isWifiConnected(context)){
 //                    bjyVideoPlayer.play();
 //                    componentContainer.dispatchCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_WIFI, null);

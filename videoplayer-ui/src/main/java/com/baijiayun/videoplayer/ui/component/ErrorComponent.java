@@ -10,6 +10,7 @@ import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
+import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
 
 /**
  * Created by yongjiaming on 2018/8/7
@@ -94,6 +95,21 @@ public class ErrorComponent extends BaseComponent {
                         notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PLAY, null);
                     }
                 });
+                break;
+            case UIEventKey.CUSTOM_CODE_NETWORK_DISCONNETCT:
+                setComponentVisibility(View.VISIBLE);
+                errorMsgTv.setText(getContext().getString(R.string.bjplayer_video_player_error_no_network));
+                retryBtn.setText(getContext().getString(R.string.bjplayer_video_reload));
+                retryBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (NetworkUtils.isNetConnected(getContext())) {
+                            notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PLAY, null);
+                        }
+                    }
+                });
+                break;
+            default:
                 break;
         }
     }
