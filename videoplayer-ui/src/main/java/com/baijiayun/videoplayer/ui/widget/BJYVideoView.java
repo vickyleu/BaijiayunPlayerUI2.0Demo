@@ -9,12 +9,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
+import com.baijiayun.constant.PlayerConstants;
 import com.baijiayun.constant.VideoDefinition;
 import com.baijiayun.download.DownloadModel;
+import com.baijiayun.glide.Glide;
 import com.baijiayun.videoplayer.BJYVideoPlayer;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.bean.BJYVideoInfo;
@@ -42,7 +45,7 @@ import com.baijiayun.videoplayer.widget.BJYPlayerView;
  * 带ui的播放器组件
  */
 
-public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
+public class BJYVideoView extends FrameLayout implements PlayerStateGetter {
 
     private static final String TAG = "BJYVideoView";
 
@@ -58,6 +61,7 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
     private long videoId;
     private String token;
     private boolean encrypted;
+    private ImageView audioCoverIv;
 
     public BJYVideoView(@NonNull Context context) {
         this(context, null);
@@ -75,6 +79,12 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         bjyPlayerView = new BJYPlayerView(context);
         addView(bjyPlayerView);
+
+        audioCoverIv = new ImageView(context);
+        audioCoverIv.setScaleType(ImageView.ScaleType.FIT_XY);
+        audioCoverIv.setVisibility(View.GONE);
+        audioCoverIv.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        addView(audioCoverIv);
 
         componentContainer = new ComponentContainer(context);
         addView(componentContainer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -122,6 +132,9 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         bjyVideoPlayer.setOnPlayerStatusChangeListener(new OnPlayerStatusChangeListener() {
             @Override
             public void onStatusChange(PlayerStatus status) {
+                if(status == PlayerStatus.STATE_PREPARED){
+                    updateAudioCoverStatus(bjyVideoPlayer.getVideoInfo() != null && bjyVideoPlayer.getVideoInfo().getDefinition() == VideoDefinition.Audio);
+                }
                 Bundle bundle = BundlePool.obtain(status);
                 componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE, bundle);
             }
@@ -165,9 +178,9 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
                 case UIEventKey.CUSTOM_CODE_REQUEST_PLAY:
                     enablePlayWithMobileNetwork = true;
                     //视频未初始化则请求视频地址
-                    if(bjyVideoPlayer.getVideoInfo().getVideoId() == 0){
+                    if (bjyVideoPlayer.getVideoInfo().getVideoId() == 0) {
                         setupOnlineVideoWithId(videoId, token, encrypted);
-                    } else{
+                    } else {
                         play();
                     }
                     break;
@@ -216,9 +229,9 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
         if (useDefaultNetworkListener) {
             registerNetChangeReceiver();
         }
-        if(!enablePlayWithMobileNetwork && NetworkUtils.isMobile(NetworkUtils.getNetworkState(getContext()))){
+        if (!enablePlayWithMobileNetwork && NetworkUtils.isMobile(NetworkUtils.getNetworkState(getContext()))) {
             sendCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
-        } else{
+        } else {
             bjyVideoPlayer.setupOnlineVideoWithId(videoId, token, encrypted);
         }
     }
@@ -380,15 +393,30 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
     }
 
     /**
+     * 更新纯音频占位图状态
+     */
+    private void updateAudioCoverStatus(boolean isAudio) {
+        if (isAudio) {
+            audioCoverIv.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(PlayerConstants.AUDIO_ON_PICTURE)
+                    .into(audioCoverIv);
+        } else {
+            audioCoverIv.setVisibility(View.GONE);
+        }
+    }
+
+    /**
      * 是否监听网络变化
+     *
      * @param enable true 监听
      */
-    public void useDefaultNetworkListener(boolean enable){
+    public void useDefaultNetworkListener(boolean enable) {
         useDefaultNetworkListener = enable;
     }
 
     private void registerNetChangeReceiver() {
-        if(mBroadcastReceiver == null){
+        if (mBroadcastReceiver == null) {
             unregisterNetChangeReceiver();
             mBroadcastReceiver = new NetChangeBroadcastReceiver();
             IntentFilter intentFilter = new IntentFilter();
@@ -424,7 +452,7 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter{
                     bjyVideoPlayer.pause();
                     componentContainer.dispatchCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
                 }
-                if(!NetworkUtils.isNetConnected(context)){
+                if (!NetworkUtils.isNetConnected(context)) {
                     bjyVideoPlayer.pause();
                     componentContainer.dispatchCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_DISCONNETCT, null);
                 }

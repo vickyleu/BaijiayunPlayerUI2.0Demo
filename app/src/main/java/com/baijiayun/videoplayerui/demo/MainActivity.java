@@ -28,33 +28,32 @@ public class MainActivity extends AppCompatActivity {
         videoView.initPlayer(new VideoPlayerFactory.Builder()
                 //后台暂停播放
                 .setSupportBackgroundAudio(false)
-                //关闭循环播放
+                //开启循环播放
                 .setSupportLooping(true)
                 //开启记忆播放
                 .setSupportBreakPointPlay(true, this)
+                //优先播放音频
+                .setAudioFirst(true)
                 //绑定activity生命周期
                 .setLifecycle(getLifecycle())
         );
 
-        videoView.setComponentEventListener(new IComponentEventListener() {
-            @Override
-            public void onReceiverEvent(int eventCode, Bundle bundle) {
-                switch (eventCode) {
-                    case UIEventKey.CUSTOM_CODE_REQUEST_BACK:
-                        if (isLandscape) {
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                        } else {
-                            finish();
-                        }
-                        break;
-                    case UIEventKey.CUSTOM_CODE_REQUEST_TOGGLE_SCREEN:
-                        setRequestedOrientation(isLandscape ?
-                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
-                                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                        break;
-                    default:
-                        break;
-                }
+        videoView.setComponentEventListener((eventCode, bundle) -> {
+            switch (eventCode) {
+                case UIEventKey.CUSTOM_CODE_REQUEST_BACK:
+                    if (isLandscape) {
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    } else {
+                        finish();
+                    }
+                    break;
+                case UIEventKey.CUSTOM_CODE_REQUEST_TOGGLE_SCREEN:
+                    setRequestedOrientation(isLandscape ?
+                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
+                            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    break;
+                default:
+                    break;
             }
         });
         if(getIntent().getBooleanExtra("isOffline", false)){

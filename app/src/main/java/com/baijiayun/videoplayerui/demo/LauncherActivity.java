@@ -120,39 +120,30 @@ public class LauncherActivity extends AppCompatActivity {
             }
         });
 
-        offlinePlayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppPermissions.newPermissions(LauncherActivity.this)
-                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<Boolean>() {
-                            @Override
-                            public void call(Boolean aBoolean) {
-                                if (aBoolean) {
-                                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                                        String videoPath = videoPathEt.getText().toString();
-                                        File file = new File(videoPath);
-                                        if (file.exists()) {
-                                            Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
-                                            intent.putExtra("videoPath", videoPath);
-                                            intent.putExtra("isOffline", true);
-                                            startActivity(intent);
-                                            sharedPreferences.edit().putString("videoPath", videoPath).apply();
-                                        } else {
-                                            Toast.makeText(LauncherActivity.this, videoPath + "不存在的", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(LauncherActivity.this, "找不到存储卡！", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(LauncherActivity.this, "没有获取读写sd卡权限", Toast.LENGTH_SHORT).show();
-                                }
+        offlinePlayBtn.setOnClickListener(v -> AppPermissions.newPermissions(LauncherActivity.this)
+                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                            String videoPath = videoPathEt.getText().toString();
+                            File file = new File(videoPath);
+                            if (file.exists()) {
+                                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+                                intent.putExtra("videoPath", videoPath);
+                                intent.putExtra("isOffline", true);
+                                startActivity(intent);
+                                sharedPreferences.edit().putString("videoPath", videoPath).apply();
+                            } else {
+                                Toast.makeText(LauncherActivity.this, videoPath + "不存在的", Toast.LENGTH_SHORT).show();
                             }
-                        });
-
-            }
-        });
+                        } else {
+                            Toast.makeText(LauncherActivity.this, "找不到存储卡！", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(LauncherActivity.this, "没有获取读写sd卡权限", Toast.LENGTH_SHORT).show();
+                    }
+                }));
     }
 
 

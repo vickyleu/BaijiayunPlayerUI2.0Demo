@@ -2,6 +2,7 @@ package com.baijiayun.videoplayerui;
 
 import android.app.Application;
 
+import com.baijiayun.BJYPlayerSDK;
 import com.baijiayun.videoplayer.util.Utils;
 
 
@@ -13,6 +14,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Utils.init(this);
+        new BJYPlayerSDK.Builder(this).enableLog(true).build();
     }
 }
