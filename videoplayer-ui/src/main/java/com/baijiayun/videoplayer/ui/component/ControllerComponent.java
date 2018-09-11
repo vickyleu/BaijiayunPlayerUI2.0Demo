@@ -145,32 +145,19 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
         mSwitchScreen = findViewById(R.id.cover_player_controller_image_view_switch_screen);
         mSeekBar = findViewById(R.id.cover_player_controller_seek_bar);
 
-        mBackIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_BACK, null);
+        mBackIcon.setOnClickListener(v -> notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_BACK, null));
+
+        mStateIcon.setOnClickListener(v -> {
+            boolean selected = mStateIcon.isSelected();
+            if (selected) {
+                requestPlay(null);
+            } else {
+                requestPause(null);
             }
+            mStateIcon.setSelected(!selected);
         });
 
-        mStateIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean selected = mStateIcon.isSelected();
-                if (selected) {
-                    requestPlay(null);
-                } else {
-                    requestPause(null);
-                }
-                mStateIcon.setSelected(!selected);
-            }
-        });
-
-        mSwitchScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_TOGGLE_SCREEN, null);
-            }
-        });
+        mSwitchScreen.setOnClickListener(v -> notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_TOGGLE_SCREEN, null));
 
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -200,15 +187,12 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
         super.key = UIEventKey.KEY_CONTROLLER_COMPONENT;
     }
 
-    private Runnable mSeekEventRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mSeekProgress < 0)
-                return;
-            Bundle bundle = BundlePool.obtain();
-            bundle.putInt(EventKey.INT_DATA, mSeekProgress);
-            requestSeek(bundle);
-        }
+    private Runnable mSeekEventRunnable = () -> {
+        if (mSeekProgress < 0)
+            return;
+        Bundle bundle = BundlePool.obtain();
+        bundle.putInt(EventKey.INT_DATA, mSeekProgress);
+        requestSeek(bundle);
     };
 
     private void setControllerState(boolean state) {

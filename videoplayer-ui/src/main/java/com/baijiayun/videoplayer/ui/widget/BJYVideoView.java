@@ -19,7 +19,6 @@ import com.baijiayun.constant.VideoDefinition;
 import com.baijiayun.download.DownloadModel;
 import com.baijiayun.glide.Glide;
 import com.baijiayun.videoplayer.BJYVideoPlayer;
-import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.bean.BJYVideoInfo;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
@@ -96,10 +95,10 @@ public class BJYVideoView extends FrameLayout implements PlayerStateGetter {
     /**
      * 初始化播放器
      *
-     * @param builder
+     * @param videoPlayer
      */
-    public void initPlayer(VideoPlayerFactory.Builder builder) {
-        bjyVideoPlayer = builder.build();
+    public void initPlayer(BJYVideoPlayer videoPlayer) {
+        bjyVideoPlayer = videoPlayer;
         bjyVideoPlayer.bindPlayerView(bjyPlayerView);
 
         bjyVideoPlayer.setOnPlayerErrorListener(new OnPlayerErrorListener() {
