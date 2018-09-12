@@ -1,4 +1,4 @@
-package com.baijiayun.videoplayer.ui;
+package com.baijiayun.videoplayer.ui.activity;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;

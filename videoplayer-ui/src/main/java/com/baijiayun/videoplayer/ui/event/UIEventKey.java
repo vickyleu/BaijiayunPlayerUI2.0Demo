@@ -13,6 +13,7 @@ public class UIEventKey {
     public static final String KEY_ERROR_COMPONENT = "error_component";
     public static final String KEY_BJYVIDEOPLAYER = "bjy_videoplayer";
     public static final String KEY_MENU_COMPONENT = "menu_component";
+    public static final String KEY_COMPONENT_CONTAINER = "component_container";
 
     /***************Custom Code*******************/
     //controller status change
@@ -31,4 +32,5 @@ public class UIEventKey {
     public static final int CUSTOM_CODE_NETWORK_CHANGE_TO_WIFI = -80013;
     public static final int CUSTOM_CODE_NETWORK_DISCONNETCT = -80014;
     public static final int CUSTOM_CODE_REQUEST_PLAY = -80015;
+    public static final int CUSTOM_CODE_TAP_PPT= -80016;
 }

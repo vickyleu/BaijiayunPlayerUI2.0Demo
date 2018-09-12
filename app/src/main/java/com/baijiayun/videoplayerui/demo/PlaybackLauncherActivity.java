@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.baijiayun.videoplayer.ui.playback.activity.PBRoomActivity;
+import com.baijiayun.videoplayer.ui.activity.PBRoomActivity;
 
 /**
  * 回放启动页
@@ -64,7 +64,7 @@ public class PlaybackLauncherActivity extends AppCompatActivity {
     }
 
     private void recoverStatus(){
-        sharedPreferences = getSharedPreferences("launcher_sp", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("playback_launcher_sp", MODE_PRIVATE);
         String roomId = sharedPreferences.getString("roomId", "0");
         String token = sharedPreferences.getString("token", "test12345678");
         String sessionId = sharedPreferences.getString("sessionId", "-1");

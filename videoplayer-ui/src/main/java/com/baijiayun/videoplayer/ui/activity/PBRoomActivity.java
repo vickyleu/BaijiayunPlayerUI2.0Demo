@@ -1,4 +1,4 @@
-package com.baijiayun.videoplayer.ui.playback.activity;
+package com.baijiayun.videoplayer.ui.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -28,15 +28,17 @@ import com.baijiayun.playback.PBRoom;
 import com.baijiayun.playback.context.LPError;
 import com.baijiayun.playback.mocklive.LPLaunchListener;
 import com.baijiayun.playback.ppt.WhiteboardView;
+import com.baijiayun.playback.ppt.photoview.OnViewTapListener;
 import com.baijiayun.playback.util.DisplayUtils;
 import com.baijiayun.playback.util.LPObservable;
 import com.baijiayun.playback.util.LPRxUtils;
 import com.baijiayun.videoplayer.BJYVideoPlayer;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
-import com.baijiayun.videoplayer.ui.BaseActivity;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
+import com.baijiayun.videoplayer.ui.listener.IComponent;
+import com.baijiayun.videoplayer.ui.listener.IFilter;
 import com.baijiayun.videoplayer.ui.playback.chat.PBChatFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.ChatPictureViewFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.ChatSavePicDialogFragment;
@@ -107,6 +109,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playback);
         initView();
+        setPPTScaleEnable(true);
         initListener();
         initRoom();
     }
@@ -124,8 +127,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         whiteboardView = new WhiteboardView(this);
         //设置ppt背景色
         whiteboardView.setBackgroundColor(ContextCompat.getColor(this, R.color.lp_ppt_bg));
-        //显示漏斗加载图
-        whiteboardView.drawLoading(true);
+
         bigContainer.addPPTView(whiteboardView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         bjyPlayerView = findViewById(R.id.pb_bjy_videoview);
         launchStepDlg = new MaterialDialog.Builder(this)
@@ -143,6 +145,11 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
             dragFrameLayout.setVisibility(View.VISIBLE);
             switchIv.setVisibility(View.GONE);
         });
+
+        whiteboardView.setOnViewTapListener((view, x, y) -> {
+            bigContainer.sendCustomEvent(UIEventKey.CUSTOM_CODE_TAP_PPT, null);
+        });
+
         dragFrameLayout.setOnClickListener(v -> {
             if (!hasLaunchSuccess) {
                 return;
@@ -363,7 +370,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         dragFrameLayout.setLayoutParams(lpSmallContainer);
     }
 
-
+    /********************************聊天message图片相关回调*************************************/
     @Override
     public void showSaveImageDialog(Bitmap bitmap) {
         ChatSavePicDialogFragment fragment = ChatSavePicDialogFragment.newInstance(bitmap);
@@ -416,6 +423,14 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         showDialogFragment(fragment);
     }
 
+    /**
+     * 设置ppt是否支持手势缩放效果
+     * @param scaleEnable
+     */
+    private void setPPTScaleEnable(boolean scaleEnable){
+        bigContainer.setGestureEnable(!scaleEnable);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -423,6 +438,10 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         if (pbRoom != null) {
             pbRoom.quitRoom();
         }
+        if(videoPlayer != null){
+            videoPlayer.release();
+        }
+        bigContainer.onDestroy();
         LPRxUtils.dispose(saveImageDisposable);
     }
 }

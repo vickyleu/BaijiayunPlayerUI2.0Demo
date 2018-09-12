@@ -1,4 +1,4 @@
-package com.baijiayun.videoplayer.ui;
+package com.baijiayun.videoplayer.ui.activity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
+import com.baijiayun.videoplayer.ui.R;
+import com.baijiayun.videoplayer.ui.activity.BaseActivity;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.widget.BJYVideoView;
 import com.baijiayun.videoplayer.util.Utils;

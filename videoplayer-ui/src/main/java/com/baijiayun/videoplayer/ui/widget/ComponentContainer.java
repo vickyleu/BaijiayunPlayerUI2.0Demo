@@ -12,20 +12,32 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.baijiayun.videoplayer.event.EventKey;
+import com.baijiayun.videoplayer.ui.component.BaseComponent;
 import com.baijiayun.videoplayer.ui.component.ComponentManager;
+import com.baijiayun.videoplayer.ui.component.ControllerComponent;
+import com.baijiayun.videoplayer.ui.component.ErrorComponent;
+import com.baijiayun.videoplayer.ui.component.GestureComponent;
+import com.baijiayun.videoplayer.ui.component.LoadingComponent;
+import com.baijiayun.videoplayer.ui.component.MenuComponent;
 import com.baijiayun.videoplayer.ui.event.EventDispatcher;
+import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponent;
+import com.baijiayun.videoplayer.ui.listener.IComponentChangeListener;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
 import com.baijiayun.videoplayer.ui.listener.IFilter;
 import com.baijiayun.videoplayer.ui.listener.OnLoopListener;
 import com.baijiayun.videoplayer.ui.listener.PlayerStateGetter;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by yongjiaming on 2018/8/7
  * 组件容器类
  */
 
-public class ComponentContainer extends FrameLayout{
+public class ComponentContainer extends FrameLayout {
     private ComponentManager componentManager;
     private IComponentEventListener onComponentEventListener;
     private String key;
@@ -34,7 +46,7 @@ public class ComponentContainer extends FrameLayout{
             new IComponentEventListener() {
                 @Override
                 public void onReceiverEvent(int eventCode, Bundle bundle) {
-                    if(bundle != null){
+                    if (bundle != null) {
                         key = bundle.getString(EventKey.KEY_PRIVATE_EVENT);
                     }
                     //通知外部监听
@@ -43,12 +55,8 @@ public class ComponentContainer extends FrameLayout{
                     }
                     //通知其它component
                     if (eventDispatcher != null) {
-                        eventDispatcher.dispatchComponentEvent(new IFilter() {
-                            @Override
-                            public boolean filter(IComponent component) {
-                                return TextUtils.isEmpty(key) || component.getKey().equals(key);
-                            }
-                        }, eventCode, bundle);
+                        eventDispatcher.dispatchComponentEvent(component ->
+                                TextUtils.isEmpty(key) || component.getKey().equals(key), eventCode, bundle);
                     }
                 }
             };
@@ -68,22 +76,10 @@ public class ComponentContainer extends FrameLayout{
 
     public ComponentContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        initGestureDetector(context);
     }
 
-    private void init(Context context) {
-        if (componentManager == null) {
-            componentManager = ComponentManager.get();
-            componentManager.generateDefaultComponentList(context);
-        }
-        eventDispatcher = new EventDispatcher(componentManager);
-        componentManager.forEach(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                addComponent(component);
-            }
-        });
-
+    private void initGestureDetector(Context context) {
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
@@ -175,12 +171,7 @@ public class ComponentContainer extends FrameLayout{
         internalComponentEventListener = null;
         eventDispatcher = null;
         stateGetter = null;
-        componentManager.forEach(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                removeComponent(component);
-            }
-        });
+        componentManager.forEach(this::removeComponent);
         componentManager.release();
     }
 
@@ -196,13 +187,13 @@ public class ComponentContainer extends FrameLayout{
         return stateGetter;
     }
 
-    public void setStateGetter(final PlayerStateGetter stateGetter) {
+    public void init(final PlayerStateGetter stateGetter, ComponentManager componentManager) {
         this.stateGetter = stateGetter;
-        componentManager.forEach(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.bindStateGetter(stateGetter);
-            }
+        this.componentManager = componentManager;
+        eventDispatcher = new EventDispatcher(componentManager);
+        componentManager.forEach(component -> {
+            component.bindStateGetter(stateGetter);
+            addComponent(component);
         });
     }
 }

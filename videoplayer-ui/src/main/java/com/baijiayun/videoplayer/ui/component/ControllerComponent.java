@@ -118,6 +118,9 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
             case UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE:
                 mStateIcon.setSelected(false);
                 break;
+            case UIEventKey.CUSTOM_CODE_TAP_PPT:
+                toggleController();
+                break;
             default:
                 break;
         }

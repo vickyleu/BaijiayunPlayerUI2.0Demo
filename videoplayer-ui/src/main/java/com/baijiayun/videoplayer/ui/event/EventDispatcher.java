@@ -5,7 +5,6 @@ import android.view.MotionEvent;
 
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.ui.component.ComponentManager;
-import com.baijiayun.videoplayer.ui.listener.IComponent;
 import com.baijiayun.videoplayer.ui.listener.IFilter;
 import com.baijiayun.videoplayer.ui.listener.OnLoopListener;
 import com.baijiayun.videoplayer.ui.listener.OnTouchGestureListener;
@@ -27,52 +26,27 @@ public class EventDispatcher {
         if(eventCode == OnPlayerEventListener.PLAYER_EVENT_ON_SURFACE_UPDATE || eventCode == OnPlayerEventListener.PLAYER_EVENT_ON_SURFACE_HOLDER_UPDATE){
             return;
         }
-        componentManager.forEach(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.onPlayerEvent(eventCode, bundle);
-            }
-        });
+        componentManager.forEach(component -> component.onPlayerEvent(eventCode, bundle));
         recycleBundle(bundle);
     }
 
     public void dispatchPlayEvent(IFilter filter, final int eventCode, final Bundle bundle) {
-        componentManager.forEach(filter, new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.onPlayerEvent(eventCode, bundle);
-            }
-        });
+        componentManager.forEach(filter, component -> component.onPlayerEvent(eventCode, bundle));
         recycleBundle(bundle);
     }
 
     public void dispatchErrorEvent(final int eventCode, final Bundle bundle) {
-        componentManager.forEach(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.onErrorEvent(eventCode, bundle);
-            }
-        });
+        componentManager.forEach(component -> component.onErrorEvent(eventCode, bundle));
         recycleBundle(bundle);
     }
 
     public void dispatchErrorEvent(IFilter filter, final int eventCode, final Bundle bundle) {
-        componentManager.forEach(filter, new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.onErrorEvent(eventCode, bundle);
-            }
-        });
+        componentManager.forEach(filter, component -> component.onErrorEvent(eventCode, bundle));
         recycleBundle(bundle);
     }
 
     public void dispatchComponentEvent(final int eventCode, final Bundle bundle) {
-        componentManager.forEach(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.onComponentEvent(eventCode, bundle);
-            }
-        });
+        componentManager.forEach(component -> component.onComponentEvent(eventCode, bundle));
         recycleBundle(bundle);
     }
 
@@ -83,32 +57,17 @@ public class EventDispatcher {
      * @param bundle
      */
     public void dispatchComponentEvent(IFilter filter, final int eventCode, final Bundle bundle) {
-        componentManager.forEach(filter, new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.onComponentEvent(eventCode, bundle);
-            }
-        });
+        componentManager.forEach(filter, component -> component.onComponentEvent(eventCode, bundle));
         recycleBundle(bundle);
     }
 
     public void dispatchCustomEvent(final int eventCode, final Bundle bundle) {
-        componentManager.forEach(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.onCustomEvent(eventCode, bundle);
-            }
-        });
+        componentManager.forEach(component -> component.onCustomEvent(eventCode, bundle));
         recycleBundle(bundle);
     }
 
     public void dispatchCustomEvent(IFilter filter, final int eventCode, final Bundle bundle) {
-        componentManager.forEach(filter, new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                component.onCustomEvent(eventCode, bundle);
-            }
-        });
+        componentManager.forEach(filter, component -> component.onCustomEvent(eventCode, bundle));
         recycleBundle(bundle);
     }
 
@@ -116,63 +75,28 @@ public class EventDispatcher {
     //-----------------------------------dispatch gesture touch event-----------------------------------
 
     public void dispatchTouchEventOnSingleTabUp(final MotionEvent event) {
-        filterImplOnTouchEventListener(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                ((OnTouchGestureListener)component).onSingleTapUp(event);
-            }
-        });
+        filterImplOnTouchEventListener(component -> ((OnTouchGestureListener)component).onSingleTapUp(event));
     }
 
     public void dispatchTouchEventOnDoubleTabUp(final MotionEvent event) {
-        filterImplOnTouchEventListener(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                ((OnTouchGestureListener)component).onDoubleTap(event);
-            }
-        });
+        filterImplOnTouchEventListener(component -> ((OnTouchGestureListener)component).onDoubleTap(event));
     }
 
     public void dispatchTouchEventOnDown(final MotionEvent event) {
-        filterImplOnTouchEventListener(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                ((OnTouchGestureListener)component).onDown(event);
-            }
-        });
+        filterImplOnTouchEventListener(component -> ((OnTouchGestureListener)component).onDown(event));
     }
 
     public void dispatchTouchEventOnScroll(final MotionEvent e1, final MotionEvent e2,
                                            final float distanceX, final float distanceY) {
-        filterImplOnTouchEventListener(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                ((OnTouchGestureListener)component).onScroll(e1, e2, distanceX, distanceY);
-            }
-        });
+        filterImplOnTouchEventListener(component -> ((OnTouchGestureListener)component).onScroll(e1, e2, distanceX, distanceY));
     }
 
     public void dispatchTouchEventOnEndGesture() {
-        filterImplOnTouchEventListener(new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                ((OnTouchGestureListener)component).onEndGesture();
-            }
-        });
+        filterImplOnTouchEventListener(component -> ((OnTouchGestureListener)component).onEndGesture());
     }
 
     private void filterImplOnTouchEventListener(final OnLoopListener onLoopListener){
-        componentManager.forEach(new IFilter() {
-            @Override
-            public boolean filter(IComponent component) {
-                return component instanceof OnTouchGestureListener;
-            }
-        }, new OnLoopListener() {
-            @Override
-            public void onEach(IComponent component) {
-                onLoopListener.onEach(component);
-            }
-        });
+        componentManager.forEach(component -> component instanceof OnTouchGestureListener, onLoopListener::onEach);
     }
 
     private void recycleBundle(Bundle bundle) {

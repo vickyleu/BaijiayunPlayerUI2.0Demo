@@ -22,22 +22,11 @@ public class ComponentManager {
     //component 集合
     private Map<String, IComponent> componentMap;
     private List<IComponentChangeListener> componentChangeListeners;
-    private static ComponentManager instance;
 
-    private ComponentManager(){
+    public ComponentManager(Context context){
         componentMap = Collections.synchronizedMap(new LinkedHashMap<String, IComponent>());
         componentChangeListeners = new CopyOnWriteArrayList<>();
-    }
-
-    public static ComponentManager get(){
-        if(instance == null){
-            synchronized (ComponentManager.class){
-                if(instance == null){
-                    instance = new ComponentManager();
-                }
-            }
-        }
-        return instance;
+        generateDefaultComponentList(context);
     }
 
     public void addComponent(String key, BaseComponent component){
@@ -95,6 +84,17 @@ public class ComponentManager {
         componentMap.clear();
         componentChangeListeners.clear();
         addComponent(UIEventKey.KEY_LOADING_COMPONENT, new LoadingComponent(context));
+        addComponent(UIEventKey.KEY_GESTURE_COMPONENT, new GestureComponent(context));
+        //controller 需在gesture布局上方，否则会有事件冲突
+        addComponent(UIEventKey.KEY_CONTROLLER_COMPONENT, new ControllerComponent(context));
+        addComponent(UIEventKey.KEY_ERROR_COMPONENT, new ErrorComponent(context));
+        addComponent(UIEventKey.KEY_MENU_COMPONENT, new MenuComponent(context));
+    }
+
+    public void generatePBComponentGroup(Context context){
+        componentMap.clear();
+        componentChangeListeners.clear();
+//        addComponent(UIEventKey.KEY_LOADING_COMPONENT, new LoadingComponent(context));
         addComponent(UIEventKey.KEY_GESTURE_COMPONENT, new GestureComponent(context));
         //controller 需在gesture布局上方，否则会有事件冲突
         addComponent(UIEventKey.KEY_CONTROLLER_COMPONENT, new ControllerComponent(context));

@@ -6,16 +6,16 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <activity
-            android:name=".playback.activity.PBRoomActivity"
+            android:name=".activity.PBRoomActivity"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:hardwareAccelerated="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity
-            android:name=".VideoPlayActivity"
+            android:name=".activity.VideoPlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme" />
-        <activity android:name=".BaseActivity"></activity>
+        <activity android:name=".activity.BaseActivity"></activity>
     </application>
 
 </manifest>

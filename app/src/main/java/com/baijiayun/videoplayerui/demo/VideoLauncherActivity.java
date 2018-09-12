@@ -9,13 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.baijiahulian.common.permission.AppPermissions;
-import com.baijiayun.constant.PlayerConstants;
-import com.baijiayun.playback.context.LPConstants;
-import com.baijiayun.videoplayer.ui.VideoPlayActivity;
+import com.baijiayun.videoplayer.ui.activity.VideoPlayActivity;
 import com.baijiayun.videoplayer.ui.component.ComponentManager;
 import com.baijiayun.videoplayer.ui.component.ControllerComponent;
 import com.baijiayun.videoplayer.ui.component.LoadingComponent;
@@ -32,7 +29,6 @@ public class VideoLauncherActivity extends AppCompatActivity {
 
     private final String VIDEO_ID = "videoId";
     private final String TOKEN = "token";
-    private final String ENVIRONMENT = "environment";
 
     private Button playBtn;
     private Button offlinePlayBtn;
@@ -56,7 +52,7 @@ public class VideoLauncherActivity extends AppCompatActivity {
     }
 
     private void recoverStatus(){
-        sharedPreferences = getSharedPreferences("launcher_sp", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("video_launcher_sp", MODE_PRIVATE);
         String videoId = sharedPreferences.getString(VIDEO_ID, "0");
         String token = sharedPreferences.getString(TOKEN, "test12345678");
         videoIdEt.setText(videoId);
@@ -84,19 +80,6 @@ public class VideoLauncherActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        ((RadioGroup) findViewById(R.id.rg_env)).setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rg_env_product) {
-                PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
-                sharedPreferences.edit().putInt(ENVIRONMENT, 2).apply();
-            } else if (checkedId == R.id.rg_env_beta) {
-                PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
-                sharedPreferences.edit().putInt(ENVIRONMENT, 1).apply();
-            } else {
-                PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
-                sharedPreferences.edit().putInt(ENVIRONMENT, 0).apply();
-            }
-        });
-
         offlinePlayBtn.setOnClickListener(v -> AppPermissions.newPermissions(VideoLauncherActivity.this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -121,12 +104,5 @@ public class VideoLauncherActivity extends AppCompatActivity {
                         Toast.makeText(VideoLauncherActivity.this, "没有获取读写sd卡权限", Toast.LENGTH_SHORT).show();
                     }
                 }));
-    }
-
-
-    private void initComponentManager(){
-        ComponentManager.get().release();
-        ComponentManager.get().addComponent(UIEventKey.KEY_LOADING_COMPONENT, new LoadingComponent(VideoLauncherActivity.this));
-        ComponentManager.get().addComponent(UIEventKey.KEY_CONTROLLER_COMPONENT, new ControllerComponent(VideoLauncherActivity.this));
     }
 }
