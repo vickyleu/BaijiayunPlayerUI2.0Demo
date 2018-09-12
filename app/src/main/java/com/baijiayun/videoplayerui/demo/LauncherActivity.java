@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.baijiayun.constant.PlayerConstants;
 import com.baijiayun.playback.context.LPConstants;
 
 public class LauncherActivity extends AppCompatActivity {

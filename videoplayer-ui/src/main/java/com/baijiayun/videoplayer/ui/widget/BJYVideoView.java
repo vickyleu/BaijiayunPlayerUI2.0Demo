@@ -1,6 +1,9 @@
 package com.baijiayun.videoplayer.ui.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.baijiayun.constant.PlayerConstants;
 import com.baijiayun.constant.VideoDefinition;
 import com.baijiayun.download.DownloadModel;
 import com.baijiayun.glide.Glide;
@@ -21,7 +23,9 @@ import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.listeners.OnBufferingListener;
 import com.baijiayun.videoplayer.log.BJLog;
 import com.baijiayun.videoplayer.player.PlayerStatus;
+import com.baijiayun.videoplayer.render.AspectRatio;
 import com.baijiayun.videoplayer.render.IRender;
+import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.component.ComponentManager;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
@@ -42,6 +46,8 @@ public class BJYVideoView extends BaseVideoView {
     private String token;
     private boolean encrypted;
     private ImageView audioCoverIv;
+    private int mAspectRatio = AspectRatio.AspectRatio_16_9.ordinal();
+    private int mRenderType = IRender.RENDER_TYPE_SURFACE_VIEW;
 
     public BJYVideoView(@NonNull Context context) {
         this(context, null);
@@ -52,9 +58,25 @@ public class BJYVideoView extends BaseVideoView {
     }
 
     public BJYVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
+        this(context, attrs, defStyleAttr, 0);
     }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public BJYVideoView(@NonNull Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BJVideoView, 0, 0);
+        if (a.hasValue(R.styleable.BJVideoView_aspect_ratio)) {
+            mAspectRatio = a.getInt(R.styleable.BJVideoView_aspect_ratio, AspectRatio.AspectRatio_16_9.ordinal());
+        }
+        if (a.hasValue(R.styleable.BJVideoView_render_type)) {
+            mRenderType = a.getInt(R.styleable.BJVideoView_render_type, IRender.RENDER_TYPE_SURFACE_VIEW);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                mRenderType = IRender.RENDER_TYPE_SURFACE_VIEW;
+            }
+        }
+        a.recycle();
+    }
+
 
     @Override
     protected void init(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -82,6 +104,10 @@ public class BJYVideoView extends BaseVideoView {
     public void initPlayer(BJYVideoPlayer videoPlayer) {
         bjyVideoPlayer = videoPlayer;
         bjyVideoPlayer.bindPlayerView(bjyPlayerView);
+
+        //初始化videoplayer之后才能设置宽高比
+        bjyPlayerView.setAspectRatio(AspectRatio.values()[mAspectRatio]);
+        bjyPlayerView.setRenderType(mRenderType);
 
         bjyVideoPlayer.setOnPlayerErrorListener(error -> {
             Bundle bundle = BundlePool.obtain();

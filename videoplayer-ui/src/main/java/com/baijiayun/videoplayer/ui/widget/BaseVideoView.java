@@ -46,6 +46,10 @@ public class BaseVideoView extends FrameLayout implements PlayerStateGetter{
     }
 
     public BaseVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        this(context, attrs, defStyleAttr, 0);
+    }
+
+    public BaseVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
     }
