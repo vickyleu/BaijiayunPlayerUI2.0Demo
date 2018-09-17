@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Created by yongjiaming on 2018/8/10 17:34
  */
-public class MenuComponent extends BaseComponent implements OnTouchGestureListener{
+public class MenuComponent extends BaseComponent implements OnTouchGestureListener {
 
     private LinearLayout menuLl;
     private TextView definitionTv;
@@ -48,14 +48,11 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
     private RateAdapter rateAdapter;
 
     private static final int HIDE_MENU = 1001;
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            if(msg.what == HIDE_MENU){
-                getView().setVisibility(View.GONE);
-            }
-            return false;
+    private Handler handler = new Handler(msg -> {
+        if (msg.what == HIDE_MENU) {
+            getView().setVisibility(View.GONE);
         }
+        return false;
     });
 
     public MenuComponent(Context context) {
@@ -78,21 +75,15 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
         recyclerView = findViewById(R.id.rv_bjplayer);
         recyclerViewLl = findViewById(R.id.bjplayer_rv_ll);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        rateTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recyclerView.setAdapter(rateAdapter);
-                recyclerViewLl.setVisibility(View.VISIBLE);
-                menuLl.setVisibility(View.GONE);
-            }
+        rateTv.setOnClickListener(v -> {
+            recyclerView.setAdapter(rateAdapter);
+            recyclerViewLl.setVisibility(View.VISIBLE);
+            menuLl.setVisibility(View.GONE);
         });
-        definitionTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recyclerView.setAdapter(definitionAdapter);
-                recyclerViewLl.setVisibility(View.VISIBLE);
-                menuLl.setVisibility(View.GONE);
-            }
+        definitionTv.setOnClickListener(v -> {
+            recyclerView.setAdapter(definitionAdapter);
+            recyclerViewLl.setVisibility(View.VISIBLE);
+            menuLl.setVisibility(View.GONE);
         });
     }
 
@@ -110,6 +101,11 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
                 isLandscape = bundle.getBoolean(EventKey.BOOL_DATA);
                 updateUI();
                 break;
+            case UIEventKey.CUSTOM_CODE_TAP_PPT:
+                doSingleTapUp();
+                break;
+            default:
+                break;
         }
     }
 
@@ -120,18 +116,18 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
             //重新设置视频源
             case OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE:
                 PlayerStatus playerStatus = (PlayerStatus) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
-                if(playerStatus != null && playerStatus == PlayerStatus.STATE_INITIALIZED){
+                if (playerStatus != null && playerStatus == PlayerStatus.STATE_INITIALIZED) {
                     BJYVideoInfo videoInfo = getStateGetter().getVideoInfo();
                     if (videoInfo != null && videoInfo.getSupportedDefinitionList() != null) {
                         definitionItemList = videoInfo.getSupportedDefinitionList();
                         definitionTv.setText(Utils.getDefinitionInString(getContext(), videoInfo.getDefinition()));
                         definitionAdapter.notifyDataSetChanged();
-                    } else{
+                    } else {
                         //离线播放隐藏
                         definitionTv.setVisibility(View.GONE);
                     }
                 }
-                if(playerStatus != null && playerStatus == PlayerStatus.STATE_STARTED){
+                if (playerStatus != null && playerStatus == PlayerStatus.STATE_STARTED) {
                     autoHideMenu();
                 }
                 break;
@@ -145,23 +141,17 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
 
     private void initAdapter() {
         definitionAdapter = new DefinitionAdapter(getContext());
-        definitionAdapter.setOnRvItemClickListener(new OnRvItemClickListener() {
-            @Override
-            public void onItemClick(View view, int index) {
-                notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_SET_DEFINITION, BundlePool.obtain(definitionItemList.get(index)));
-                definitionTv.setText(Utils.getDefinitionInString(getContext(), definitionItemList.get(index)));
-                recyclerViewLl.setVisibility(View.GONE);
-                menuLl.setVisibility(View.VISIBLE);
-            }
+        definitionAdapter.setOnRvItemClickListener((view, index) -> {
+            notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_SET_DEFINITION, BundlePool.obtain(definitionItemList.get(index)));
+            definitionTv.setText(Utils.getDefinitionInString(getContext(), definitionItemList.get(index)));
+            recyclerViewLl.setVisibility(View.GONE);
+            menuLl.setVisibility(View.VISIBLE);
         });
         rateAdapter = new RateAdapter();
-        rateAdapter.setOnRvItemClickListener(new OnRvItemClickListener() {
-            @Override
-            public void onItemClick(View view, int index) {
-                notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_SET_RATE, BundlePool.obtain(rateList.get(index).rate));
-                recyclerViewLl.setVisibility(View.GONE);
-                menuLl.setVisibility(View.VISIBLE);
-            }
+        rateAdapter.setOnRvItemClickListener((view, index) -> {
+            notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_SET_RATE, BundlePool.obtain(rateList.get(index).rate));
+            recyclerViewLl.setVisibility(View.GONE);
+            menuLl.setVisibility(View.VISIBLE);
         });
     }
 
@@ -175,12 +165,7 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
 
     @Override
     public void onSingleTapUp(MotionEvent event) {
-        if(recyclerViewLl.getVisibility() == View.VISIBLE){
-           recyclerViewLl.setVisibility(View.GONE);
-           menuLl.setVisibility(View.VISIBLE);
-        }
-        setComponentVisibility(getView().getVisibility() == View.VISIBLE ? View.GONE: View.VISIBLE);
-        autoHideMenu();
+        doSingleTapUp();
     }
 
     @Override
@@ -203,7 +188,15 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
 
     }
 
-    private void autoHideMenu(){
+    private void doSingleTapUp(){
+        if (recyclerViewLl.getVisibility() == View.VISIBLE) {
+            recyclerViewLl.setVisibility(View.GONE);
+            menuLl.setVisibility(View.VISIBLE);
+        }
+        setComponentVisibility(getView().getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
+
+    private void autoHideMenu() {
         handler.removeMessages(HIDE_MENU);
         handler.sendEmptyMessageDelayed(HIDE_MENU, 5000);
     }

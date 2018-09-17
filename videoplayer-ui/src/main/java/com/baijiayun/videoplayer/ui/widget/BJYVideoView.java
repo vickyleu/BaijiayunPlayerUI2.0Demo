@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.baijiayun.BJYPlayerSDK;
 import com.baijiayun.constant.VideoDefinition;
 import com.baijiayun.download.DownloadModel;
 import com.baijiayun.glide.Glide;
@@ -232,7 +233,7 @@ public class BJYVideoView extends BaseVideoView {
         if (isAudio) {
             audioCoverIv.setVisibility(View.VISIBLE);
             Glide.with(this)
-                    .load(PlayerConstants.AUDIO_ON_PICTURE)
+                    .load(BJYPlayerSDK.AUDIO_ON_PICTURE)
                     .into(audioCoverIv);
         } else {
             audioCoverIv.setVisibility(View.GONE);

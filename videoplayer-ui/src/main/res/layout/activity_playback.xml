@@ -68,7 +68,7 @@
             android:id="@+id/pb_bjy_videoview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:aspect_ratio="fit_parent_16_9"
+            app:aspect_ratio="fill_parent"
             />
 
     </com.baijiayun.videoplayer.ui.playback.viewsupport.DragFrameLayout>

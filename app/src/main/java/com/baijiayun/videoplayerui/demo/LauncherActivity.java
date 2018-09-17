@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.baijiayun.BJYPlayerSDK;
 import com.baijiayun.playback.context.LPConstants;
 
 public class LauncherActivity extends AppCompatActivity {
@@ -37,13 +38,13 @@ public class LauncherActivity extends AppCompatActivity {
         //默认正式服
         int env = sharedPreferences.getInt(ENVIRONMENT, 2);
         if(env == 0){
-            PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
+            BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
             testRadion.setChecked(true);
         } else if(env == 1){
-            PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
+            BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
             betaRadion.setChecked(true);
         } else{
-            PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
+            BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
             productRadio.setChecked(true);
         }
         videoLauncherBtn.setOnClickListener(v -> {
@@ -57,13 +58,13 @@ public class LauncherActivity extends AppCompatActivity {
     private void initListener(){
         ((RadioGroup) findViewById(R.id.rg_env)).setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rg_env_product) {
-                PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
+                BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
                 sharedPreferences.edit().putInt(ENVIRONMENT, 2).apply();
             } else if (checkedId == R.id.rg_env_beta) {
-                PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
+                BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
                 sharedPreferences.edit().putInt(ENVIRONMENT, 1).apply();
             } else {
-                PlayerConstants.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
+                BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
                 sharedPreferences.edit().putInt(ENVIRONMENT, 0).apply();
             }
         });

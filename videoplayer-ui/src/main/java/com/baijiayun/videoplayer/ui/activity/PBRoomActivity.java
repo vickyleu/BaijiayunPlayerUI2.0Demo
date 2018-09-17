@@ -28,7 +28,6 @@ import com.baijiayun.playback.PBRoom;
 import com.baijiayun.playback.context.LPError;
 import com.baijiayun.playback.mocklive.LPLaunchListener;
 import com.baijiayun.playback.ppt.WhiteboardView;
-import com.baijiayun.playback.ppt.photoview.OnViewTapListener;
 import com.baijiayun.playback.util.DisplayUtils;
 import com.baijiayun.playback.util.LPObservable;
 import com.baijiayun.playback.util.LPRxUtils;
@@ -37,8 +36,6 @@ import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
-import com.baijiayun.videoplayer.ui.listener.IComponent;
-import com.baijiayun.videoplayer.ui.listener.IFilter;
 import com.baijiayun.videoplayer.ui.playback.chat.PBChatFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.ChatPictureViewFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.ChatSavePicDialogFragment;
@@ -70,7 +67,6 @@ import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
  */
 public class PBRoomActivity extends BaseActivity implements IChatMessageCallback {
     private static final String CHAT_FRAGMENT_TAG = "CHAT_FRAGMENT_TAG";
-
     //播放器
     private BJYVideoPlayer videoPlayer;
     private PBRoom pbRoom;
@@ -109,6 +105,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playback);
         initView();
+        //允许PPT缩放手势（同时关闭了音量、亮度调节）
         setPPTScaleEnable(true);
         initListener();
         initRoom();
@@ -246,10 +243,14 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         String token = getIntent().getStringExtra("token");
         long sessionId = getIntent().getLongExtra("sessionId", -1L);
         pbRoom = BJYPlayerSDK.newPlayBackRoom(this, roomId, sessionId, token);
-        bigContainer.attachPBRoom(pbRoom, videoPlayer);
-        whiteboardView.attachPBRoom(pbRoom);
+        //videoplayer绑定视频渲染层
         videoPlayer.bindPlayerView(bjyPlayerView);
+        //pbRoom持有videoplayer引用
         pbRoom.bindPlayer(videoPlayer);
+        //视频&ppt容器持有pbRoom
+        bigContainer.attachPBRoom(pbRoom);
+        //ppt view持有
+        whiteboardView.attachPBRoom(pbRoom);
         pbRoom.enterRoom(new LPLaunchListener() {
             @Override
             public void onLaunchSteps(int step, int totalStep) {
@@ -292,6 +293,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         dragFrameLayout.removeView(smallView);
         bigContainer.addView(smallView, 0);
         dragFrameLayout.addView(bigView, 0);
+        setPPTScaleEnable(isVideoInDragFrameLayout);
     }
 
     /**

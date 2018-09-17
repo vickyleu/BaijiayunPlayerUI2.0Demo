@@ -64,9 +64,8 @@ public class BJYPlaybackContainer extends BaseVideoView {
      * 绑定PBRoom和BJYVideoPlayer,实现视频状态监听和视频控制
      *
      * @param pbRoom
-     * @param videoPlayer
      */
-    public void attachPBRoom(PBRoom pbRoom, BJYVideoPlayer videoPlayer) {
+    public void attachPBRoom(PBRoom pbRoom) {
         pbRoom.setOnPlayerListener(new OnPlayerListener() {
             @Override
             public void onBufferingStart() {
@@ -98,7 +97,7 @@ public class BJYPlaybackContainer extends BaseVideoView {
                 componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE, bundle);
             }
         });
-        bjyVideoPlayer = videoPlayer;
+        bjyVideoPlayer = pbRoom.getPlayer();
     }
 
     @Override
