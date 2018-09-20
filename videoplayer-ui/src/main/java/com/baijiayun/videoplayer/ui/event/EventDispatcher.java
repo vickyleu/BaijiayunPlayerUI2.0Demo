@@ -2,6 +2,7 @@ package com.baijiayun.videoplayer.ui.event;
 
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.ui.component.ComponentManager;

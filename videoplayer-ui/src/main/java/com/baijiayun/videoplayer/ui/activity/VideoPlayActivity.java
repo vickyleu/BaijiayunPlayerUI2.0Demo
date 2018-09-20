@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.ui.R;
-import com.baijiayun.videoplayer.ui.activity.BaseActivity;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.widget.BJYVideoView;
 import com.baijiayun.videoplayer.util.Utils;
@@ -39,6 +38,7 @@ public class VideoPlayActivity extends BaseActivity {
                 .setLifecycle(getLifecycle()).build()
         );
 
+
         videoView.setComponentEventListener((eventCode, bundle) -> {
             switch (eventCode) {
                 case UIEventKey.CUSTOM_CODE_REQUEST_BACK:
@@ -60,7 +60,7 @@ public class VideoPlayActivity extends BaseActivity {
         if(getIntent().getBooleanExtra("isOffline", false)){
             videoView.setupLocalVideoWithFilePath(getIntent().getStringExtra("videoPath"));
         } else{
-            videoView.setupOnlineVideoWithId(getIntent().getLongExtra("videoId", 0L), getIntent().getStringExtra("token"));
+            videoView.setupOnlineVideoWithId(getIntent().getLongExtra("videoId", 0L), getIntent().getStringExtra("token"), true);
         }
     }
 

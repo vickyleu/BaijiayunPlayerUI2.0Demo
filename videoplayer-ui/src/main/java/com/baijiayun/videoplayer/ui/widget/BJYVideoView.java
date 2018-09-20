@@ -157,6 +157,7 @@ public class BJYVideoView extends BaseVideoView {
         //视频未初始化成功则请求视频地址
         if (getVideoInfo() == null || getVideoInfo().getVideoId() == 0) {
             setupOnlineVideoWithId(videoId, token, encrypted);
+            sendCustomEvent(UIEventKey.CUSTOM_CODE_REQUEST_VIDEO_INFO, null);
         } else {
             play();
         }
@@ -169,7 +170,7 @@ public class BJYVideoView extends BaseVideoView {
      * @param token   需要集成方后端调用百家云后端的API获取
      */
     public void setupOnlineVideoWithId(long videoId, String token) {
-        setupOnlineVideoWithId(videoId, token, false);
+        setupOnlineVideoWithId(videoId, token, true);
     }
 
     /**

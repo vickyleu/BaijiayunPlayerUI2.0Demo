@@ -22,6 +22,7 @@ import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.OnTouchGestureListener;
+import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
 import com.baijiayun.videoplayer.util.Utils;
 
 
@@ -114,12 +115,16 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
         switch (eventCode) {
             case UIEventKey.CUSTOM_CODE_REQUEST_TOGGLE_SCREEN:
                 setSwitchScreenIcon(bundle.getBoolean(EventKey.BOOL_DATA));
+                sendDelayHiddenMessage();
                 break;
             case UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE:
                 mStateIcon.setSelected(false);
                 break;
             case UIEventKey.CUSTOM_CODE_TAP_PPT:
                 toggleController();
+                break;
+            case UIEventKey.CUSTOM_CODE_NETWORK_DISCONNETCT:
+                setControllerState(false);
                 break;
             default:
                 break;
@@ -213,6 +218,9 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
     }
 
     private void toggleController() {
+        if(!NetworkUtils.isNetConnected(getContext())){
+            return;
+        }
         if (isControllerShow()) {
             setControllerState(false);
         } else {

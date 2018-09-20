@@ -60,6 +60,9 @@ public class ErrorComponent extends BaseComponent {
                         break;
                 }
                 break;
+            case UIEventKey.PLAYER_CODE_BUFFERING_START:
+                setComponentVisibility(View.GONE);
+                break;
             default:
                 break;
         }
@@ -74,12 +77,7 @@ public class ErrorComponent extends BaseComponent {
         setComponentVisibility(View.VISIBLE);
         errorMsgTv.setText(bundle.getString(EventKey.STRING_DATA));
         errorCodeTv.setText("[" + eventCode + "]");
-        retryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_REPLAY, null);
-            }
-        });
+        retryBtn.setOnClickListener(v -> notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_REPLAY, null));
     }
 
     @Override
@@ -89,23 +87,19 @@ public class ErrorComponent extends BaseComponent {
                 setComponentVisibility(View.VISIBLE);
                 errorMsgTv.setText(getContext().getString(R.string.bjplayer_play_no_wifi));
                 retryBtn.setText(getContext().getString(R.string.bjplayer_still_play));
-                retryBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PLAY, null);
-                    }
+                retryBtn.setOnClickListener(v -> {
+                    setComponentVisibility(View.GONE);
+                    notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PLAY, null);
                 });
                 break;
             case UIEventKey.CUSTOM_CODE_NETWORK_DISCONNETCT:
                 setComponentVisibility(View.VISIBLE);
                 errorMsgTv.setText(getContext().getString(R.string.bjplayer_video_player_error_no_network));
                 retryBtn.setText(getContext().getString(R.string.bjplayer_video_reload));
-                retryBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (NetworkUtils.isNetConnected(getContext())) {
-                            notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PLAY, null);
-                        }
+                retryBtn.setOnClickListener(v -> {
+                    if (NetworkUtils.isNetConnected(getContext())) {
+                        setComponentVisibility(View.GONE);
+                        notifyComponentEvent(UIEventKey.CUSTOM_CODE_REQUEST_PLAY, null);
                     }
                 });
                 break;

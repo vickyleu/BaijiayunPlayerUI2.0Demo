@@ -33,4 +33,5 @@ public class UIEventKey {
     public static final int CUSTOM_CODE_NETWORK_DISCONNETCT = -80014;
     public static final int CUSTOM_CODE_REQUEST_PLAY = -80015;
     public static final int CUSTOM_CODE_TAP_PPT= -80016;
+    public static final int CUSTOM_CODE_REQUEST_VIDEO_INFO = -80017;
 }

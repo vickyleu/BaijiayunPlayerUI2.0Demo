@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
-import com.baijiayun.videoplayer.log.BJLog;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
@@ -80,6 +79,9 @@ public class LoadingComponent extends BaseComponent {
         switch (eventCode) {
             case UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE:
                 setLoadingState(false);
+                break;
+            case UIEventKey.CUSTOM_CODE_REQUEST_VIDEO_INFO:
+                setLoadingState(true);
                 break;
         }
     }

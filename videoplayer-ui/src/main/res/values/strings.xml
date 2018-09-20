@@ -32,5 +32,7 @@
     <string name="live_cancel">取消</string>
     <string name="live_image_save">保存图片</string>
 
+    <string name="video_is_loading">%s 视频正在加载</string>
+
 
 </resources>

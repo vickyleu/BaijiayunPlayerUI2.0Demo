@@ -100,6 +100,7 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
                 //横屏才显示菜单项
                 isLandscape = bundle.getBoolean(EventKey.BOOL_DATA);
                 updateUI();
+                autoHideMenu();
                 break;
             case UIEventKey.CUSTOM_CODE_TAP_PPT:
                 doSingleTapUp();
@@ -194,6 +195,7 @@ public class MenuComponent extends BaseComponent implements OnTouchGestureListen
             menuLl.setVisibility(View.VISIBLE);
         }
         setComponentVisibility(getView().getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        autoHideMenu();
     }
 
     private void autoHideMenu() {
