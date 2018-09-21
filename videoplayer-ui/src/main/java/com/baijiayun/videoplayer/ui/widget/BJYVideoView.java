@@ -17,7 +17,7 @@ import com.baijiayun.BJYPlayerSDK;
 import com.baijiayun.constant.VideoDefinition;
 import com.baijiayun.download.DownloadModel;
 import com.baijiayun.glide.Glide;
-import com.baijiayun.videoplayer.BJYVideoPlayer;
+import com.baijiayun.videoplayer.IBJYVideoPlayer;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
@@ -89,20 +89,10 @@ public class BJYVideoView extends BaseVideoView {
         audioCoverIv.setVisibility(View.GONE);
         audioCoverIv.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         addView(audioCoverIv);
-
-        componentContainer = new ComponentContainer(context);
-        componentContainer.init(this, new ComponentManager(context));
-        componentContainer.setOnComponentEventListener(internalComponentEventListener);
-        addView(componentContainer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
-    /**
-     * 初始化播放器
-     *
-     * @param videoPlayer
-     */
-    public void initPlayer(BJYVideoPlayer videoPlayer) {
+    public void initPlayer(IBJYVideoPlayer videoPlayer, boolean shouldRenderCustomComponent) {
+
         bjyVideoPlayer = videoPlayer;
         bjyVideoPlayer.bindPlayerView(bjyPlayerView);
 
@@ -110,45 +100,68 @@ public class BJYVideoView extends BaseVideoView {
         bjyPlayerView.setAspectRatio(AspectRatio.values()[mAspectRatio]);
         bjyPlayerView.setRenderType(mRenderType);
 
-        bjyVideoPlayer.setOnPlayerErrorListener(error -> {
-            Bundle bundle = BundlePool.obtain();
-            bundle.putString(EventKey.STRING_DATA, error.getMessage());
-            componentContainer.dispatchErrorEvent(error.getCode(), bundle);
-        });
+        if (shouldRenderCustomComponent) {
+            initComponentContainer();
 
-        bjyVideoPlayer.setOnPlayingTimeChangeListener((currentTime, duration) -> {
-            //只通知到controller component
-            Bundle bundle = BundlePool.obtainPrivate(UIEventKey.KEY_CONTROLLER_COMPONENT, currentTime);
-            componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE, bundle);
-        });
+            bjyVideoPlayer.setOnPlayerErrorListener(error -> {
+                Bundle bundle = BundlePool.obtain();
+                bundle.putString(EventKey.STRING_DATA, error.getMessage());
+                componentContainer.dispatchErrorEvent(error.getCode(), bundle);
+            });
 
-        bjyVideoPlayer.setOnBufferUpdateListener(bufferedPercentage -> {
-            //只通知到controller component
-            Bundle bundle = BundlePool.obtainPrivate(UIEventKey.KEY_CONTROLLER_COMPONENT, bufferedPercentage);
-            componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE, bundle);
-        });
+            bjyVideoPlayer.setOnPlayingTimeChangeListener((currentTime, duration) -> {
+                //只通知到controller component
+                Bundle bundle = BundlePool.obtainPrivate(UIEventKey.KEY_CONTROLLER_COMPONENT, currentTime);
+                componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE, bundle);
+            });
+
+            bjyVideoPlayer.setOnBufferUpdateListener(bufferedPercentage -> {
+                //只通知到controller component
+                Bundle bundle = BundlePool.obtainPrivate(UIEventKey.KEY_CONTROLLER_COMPONENT, bufferedPercentage);
+                componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE, bundle);
+            });
+
+            bjyVideoPlayer.setOnBufferingListener(new OnBufferingListener() {
+                @Override
+                public void onBufferingStart() {
+                    BJLog.d("bjy", "onBufferingStart invoke");
+                    componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_START, null);
+                }
+
+                @Override
+                public void onBufferingEnd() {
+                    BJLog.d("bjy", "onBufferingEnd invoke");
+                    componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_END, null);
+                }
+            });
+        }
 
         bjyVideoPlayer.setOnPlayerStatusChangeListener(status -> {
             if (status == PlayerStatus.STATE_PREPARED) {
                 updateAudioCoverStatus(bjyVideoPlayer.getVideoInfo() != null && bjyVideoPlayer.getVideoInfo().getDefinition() == VideoDefinition.Audio);
             }
-            Bundle bundle = BundlePool.obtain(status);
-            componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE, bundle);
-        });
-
-        bjyVideoPlayer.setOnBufferingListener(new OnBufferingListener() {
-            @Override
-            public void onBufferingStart() {
-                BJLog.d("bjy", "onBufferingStart invoke");
-                componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_START, null);
-            }
-
-            @Override
-            public void onBufferingEnd() {
-                BJLog.d("bjy", "onBufferingEnd invoke");
-                componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_END, null);
+            if (componentContainer != null) {
+                Bundle bundle = BundlePool.obtain(status);
+                componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE, bundle);
             }
         });
+    }
+
+    /**
+     * 初始化播放器
+     *
+     * @param videoPlayer
+     */
+    public void initPlayer(IBJYVideoPlayer videoPlayer) {
+        initPlayer(videoPlayer, true);
+    }
+
+    private void initComponentContainer() {
+        componentContainer = new ComponentContainer(getContext());
+        componentContainer.init(this, new ComponentManager(getContext()));
+        componentContainer.setOnComponentEventListener(internalComponentEventListener);
+        addView(componentContainer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     @Override

@@ -25,4 +25,5 @@
     <color name="live_blue">#37A4F5</color>
     <color name="live_fail">#EDEDEE</color>
     <color name="live_selector_not_pressed">#dedede</color>
+    <color name="media_debug_component_bg">#4F3D3D3E</color>
 </resources>

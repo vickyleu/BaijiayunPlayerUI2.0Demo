@@ -31,7 +31,7 @@ import com.baijiayun.playback.ppt.WhiteboardView;
 import com.baijiayun.playback.util.DisplayUtils;
 import com.baijiayun.playback.util.LPObservable;
 import com.baijiayun.playback.util.LPRxUtils;
-import com.baijiayun.videoplayer.BJYVideoPlayer;
+import com.baijiayun.videoplayer.IBJYVideoPlayer;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.ui.R;
@@ -43,8 +43,8 @@ import com.baijiayun.videoplayer.ui.playback.chat.preview.IChatMessageCallback;
 import com.baijiayun.videoplayer.ui.playback.viewsupport.AutoExitDrawerLayout;
 import com.baijiayun.videoplayer.ui.playback.viewsupport.DragFrameLayout;
 import com.baijiayun.videoplayer.ui.widget.BJYPlaybackContainer;
+import com.baijiayun.videoplayer.ui.widget.BJYVideoView;
 import com.baijiayun.videoplayer.util.Utils;
-import com.baijiayun.videoplayer.widget.BJYPlayerView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,14 +68,14 @@ import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 public class PBRoomActivity extends BaseActivity implements IChatMessageCallback {
     private static final String CHAT_FRAGMENT_TAG = "CHAT_FRAGMENT_TAG";
     //播放器
-    private BJYVideoPlayer videoPlayer;
+    private IBJYVideoPlayer videoPlayer;
     private PBRoom pbRoom;
 
     private MaterialDialog launchStepDlg;
     //ppt控件
     private WhiteboardView whiteboardView;
     //视频播放器控件
-    private BJYPlayerView bjyPlayerView;
+    private BJYVideoView bjyVideoView;
     //ppt默认容器，可供PPT和视频切换
     private BJYPlaybackContainer bigContainer;
     //可拖拽的FrameLayout
@@ -126,7 +126,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         whiteboardView.setBackgroundColor(ContextCompat.getColor(this, R.color.lp_ppt_bg));
 
         bigContainer.addPPTView(whiteboardView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        bjyPlayerView = findViewById(R.id.pb_bjy_videoview);
+        bjyVideoView = findViewById(R.id.pb_bjy_videoview);
         launchStepDlg = new MaterialDialog.Builder(this)
                 .content("正在加载...")
                 .progress(true, 100, false)
@@ -243,8 +243,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         String token = getIntent().getStringExtra("token");
         long sessionId = getIntent().getLongExtra("sessionId", -1L);
         pbRoom = BJYPlayerSDK.newPlayBackRoom(this, roomId, sessionId, token);
-        //videoplayer绑定视频渲染层
-        videoPlayer.bindPlayerView(bjyPlayerView);
+        bjyVideoView.initPlayer(videoPlayer, false);
         //pbRoom持有videoplayer引用
         pbRoom.bindPlayer(videoPlayer);
         //视频&ppt容器持有pbRoom
@@ -266,6 +265,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                     launchStepDlg.dismiss();
                 }
                 Toast.makeText(PBRoomActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                bigContainer.sendCustomEvent(UIEventKey.CUSTOM_CODE_ENTER_ROOM_ERROR, null);
             }
 
             @Override

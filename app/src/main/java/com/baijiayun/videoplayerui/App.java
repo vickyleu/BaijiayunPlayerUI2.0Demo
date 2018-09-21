@@ -14,6 +14,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        new BJYPlayerSDK.Builder(this).enableLog(true).build();
+        //配置sdk
+        new BJYPlayerSDK.Builder(this)
+                .setDevelopMode(true)
+                .build();
     }
 }

@@ -11,8 +11,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import com.baijiayun.constant.MediaPlayerDebugInfo;
 import com.baijiayun.constant.VideoDefinition;
-import com.baijiayun.videoplayer.BJYVideoPlayer;
+import com.baijiayun.videoplayer.IBJYVideoPlayer;
 import com.baijiayun.videoplayer.bean.BJYVideoInfo;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.player.PlayerStatus;
@@ -27,7 +28,7 @@ import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
  */
 public class BaseVideoView extends FrameLayout implements PlayerStateGetter{
 
-    protected BJYVideoPlayer bjyVideoPlayer;
+    protected IBJYVideoPlayer bjyVideoPlayer;
     protected ComponentContainer componentContainer;
     private IComponentEventListener componentEventListener;
 
@@ -189,6 +190,11 @@ public class BaseVideoView extends FrameLayout implements PlayerStateGetter{
     @Override
     public BJYVideoInfo getVideoInfo() {
         return bjyVideoPlayer.getVideoInfo();
+    }
+
+    @Override
+    public MediaPlayerDebugInfo getMediaPlayerDebugInfo() {
+        return bjyVideoPlayer.getMediaPlayerDebugInfo();
     }
 
     /**

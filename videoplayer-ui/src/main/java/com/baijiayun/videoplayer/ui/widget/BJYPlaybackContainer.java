@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.baijiayun.playback.PBRoom;
 import com.baijiayun.playback.mocklive.OnPlayerListener;
-import com.baijiayun.videoplayer.BJYVideoPlayer;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
@@ -47,8 +46,6 @@ public class BJYPlaybackContainer extends BaseVideoView {
         addView(pptOrVideoContainer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         ComponentManager componentManager = new ComponentManager(context);
-        //使用没有loading的component组合
-        componentManager.generatePBComponentGroup(context);
         componentContainer = new ComponentContainer(context);
         componentContainer.init(this, componentManager);
         addView(componentContainer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

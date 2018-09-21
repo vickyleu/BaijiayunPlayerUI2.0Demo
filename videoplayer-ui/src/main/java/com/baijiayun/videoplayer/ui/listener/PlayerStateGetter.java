@@ -19,6 +19,7 @@ package com.baijiayun.videoplayer.ui.listener;
 
 import android.support.annotation.Nullable;
 
+import com.baijiayun.constant.MediaPlayerDebugInfo;
 import com.baijiayun.videoplayer.bean.BJYVideoInfo;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 
@@ -69,4 +70,6 @@ public interface PlayerStateGetter {
      */
     @Nullable
     BJYVideoInfo getVideoInfo();
+
+    MediaPlayerDebugInfo getMediaPlayerDebugInfo();
 }

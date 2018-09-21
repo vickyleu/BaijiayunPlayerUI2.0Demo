@@ -5,11 +5,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.baijiayun.playback.util.LPRxUtils;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
+import com.baijiayun.videoplayer.ui.utils.Utils;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by yongjiaming on 2018/8/7
@@ -18,6 +26,7 @@ import com.baijiayun.videoplayer.ui.event.UIEventKey;
 public class LoadingComponent extends BaseComponent {
 
     private TextView loadingTipTv;
+    private Disposable disposable;
 
     public LoadingComponent(Context context) {
         super(context);
@@ -40,10 +49,10 @@ public class LoadingComponent extends BaseComponent {
 
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
-        switch (eventCode){
+        switch (eventCode) {
             case OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE:
                 PlayerStatus playerStatus = (PlayerStatus) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
-                if(playerStatus == null){
+                if (playerStatus == null) {
                     return;
                 }
                 switch (playerStatus) {
@@ -77,20 +86,38 @@ public class LoadingComponent extends BaseComponent {
     @Override
     public void onCustomEvent(int eventCode, Bundle bundle) {
         switch (eventCode) {
+            case UIEventKey.CUSTOM_CODE_ENTER_ROOM_ERROR:
             case UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE:
                 setLoadingState(false);
                 break;
             case UIEventKey.CUSTOM_CODE_REQUEST_VIDEO_INFO:
                 setLoadingState(true);
                 break;
+            default:
+                break;
         }
     }
 
     private void setLoadingState(boolean show) {
         setComponentVisibility(show ? View.VISIBLE : View.GONE);
+        if (show) {
+            disposable = Observable.interval(0, 500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> {
+                        setTips(getContext().getString(R.string.video_is_loading, Utils.formatedSpeed(getStateGetter().getMediaPlayerDebugInfo().tcpSpeed, 1000)));
+                    });
+        } else {
+            LPRxUtils.dispose(disposable);
+        }
     }
 
     private void setTips(String tips) {
         loadingTipTv.setText(tips);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        LPRxUtils.dispose(disposable);
     }
 }

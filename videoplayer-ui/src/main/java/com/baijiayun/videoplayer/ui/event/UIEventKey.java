@@ -13,7 +13,7 @@ public class UIEventKey {
     public static final String KEY_ERROR_COMPONENT = "error_component";
     public static final String KEY_BJYVIDEOPLAYER = "bjy_videoplayer";
     public static final String KEY_MENU_COMPONENT = "menu_component";
-    public static final String KEY_COMPONENT_CONTAINER = "component_container";
+    public static final String KEY_VIDEO_INFO_COMPONENT = "video_info_component";
 
     /***************Custom Code*******************/
     //controller status change
@@ -34,4 +34,5 @@ public class UIEventKey {
     public static final int CUSTOM_CODE_REQUEST_PLAY = -80015;
     public static final int CUSTOM_CODE_TAP_PPT= -80016;
     public static final int CUSTOM_CODE_REQUEST_VIDEO_INFO = -80017;
+    public static final int CUSTOM_CODE_ENTER_ROOM_ERROR = -80018;
 }

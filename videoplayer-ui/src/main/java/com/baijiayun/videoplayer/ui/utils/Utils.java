@@ -88,5 +88,23 @@ public class Utils {
         }
     }
 
+    public static String formatedDurationMilli(long duration) {
+        if (duration >=  1000) {
+            return String.format(Locale.US, "%.2f sec", ((float)duration) / 1000);
+        } else {
+            return String.format(Locale.US, "%d msec", duration);
+        }
+    }
+
+    public static String formatedSize(long bytes) {
+        if (bytes >= 100 * 1000) {
+            return String.format(Locale.US, "%.2f MB", ((float)bytes) / 1000 / 1000);
+        } else if (bytes >= 100) {
+            return String.format(Locale.US, "%.1f KB", ((float)bytes) / 1000);
+        } else {
+            return String.format(Locale.US, "%d B", bytes);
+        }
+    }
+
 
 }

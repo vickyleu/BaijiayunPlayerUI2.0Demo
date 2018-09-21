@@ -64,10 +64,11 @@
         android:layout_below="@id/fl_pb_container_big"
         >
 
-        <com.baijiayun.videoplayer.widget.BJYPlayerView
+        <com.baijiayun.videoplayer.ui.widget.BJYVideoView
             android:id="@+id/pb_bjy_videoview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:render_type="texture_view"
             app:aspect_ratio="fill_parent"
             />
 
