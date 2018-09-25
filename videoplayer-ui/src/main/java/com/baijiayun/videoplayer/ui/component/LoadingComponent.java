@@ -5,19 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.baijiayun.playback.util.LPRxUtils;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
-import com.baijiayun.videoplayer.ui.utils.Utils;
-
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by yongjiaming on 2018/8/7
@@ -26,7 +18,6 @@ import io.reactivex.disposables.Disposable;
 public class LoadingComponent extends BaseComponent {
 
     private TextView loadingTipTv;
-    private Disposable disposable;
 
     public LoadingComponent(Context context) {
         super(context);
@@ -100,24 +91,10 @@ public class LoadingComponent extends BaseComponent {
 
     private void setLoadingState(boolean show) {
         setComponentVisibility(show ? View.VISIBLE : View.GONE);
-        if (show) {
-            disposable = Observable.interval(0, 500, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> {
-                        setTips(getContext().getString(R.string.video_is_loading, Utils.formatedSpeed(getStateGetter().getMediaPlayerDebugInfo().tcpSpeed, 1000)));
-                    });
-        } else {
-            LPRxUtils.dispose(disposable);
-        }
     }
 
     private void setTips(String tips) {
         loadingTipTv.setText(tips);
     }
 
-    @Override
-    public void destroy() {
-        super.destroy();
-        LPRxUtils.dispose(disposable);
-    }
 }
