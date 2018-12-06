@@ -10,12 +10,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.baijiayun.constant.MediaPlayerDebugInfo;
 import com.baijiayun.constant.VideoDefinition;
 import com.baijiayun.videoplayer.IBJYVideoPlayer;
 import com.baijiayun.videoplayer.bean.BJYVideoInfo;
 import com.baijiayun.videoplayer.event.EventKey;
+import com.baijiayun.videoplayer.log.BJLog;
 import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
@@ -293,6 +295,8 @@ public class BaseVideoView extends FrameLayout implements PlayerStateGetter{
                 }
                 if (!NetworkUtils.isNetConnected(context)) {
                     bjyVideoPlayer.pause();
+                    BJLog.d("receive network disconnect, pause video");
+//                    Toast.makeText(getContext(), "pause video", Toast.LENGTH_LONG).show();
                     componentContainer.dispatchCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_DISCONNETCT, null);
                 }
 //                if(NetworkUtils.isWifiConnected(context)){

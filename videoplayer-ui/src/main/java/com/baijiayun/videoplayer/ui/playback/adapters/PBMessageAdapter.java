@@ -24,7 +24,7 @@ import com.baijiayun.glide.request.RequestListener;
 import com.baijiayun.glide.request.RequestOptions;
 import com.baijiayun.glide.request.target.Target;
 import com.baijiayun.playback.bean.models.imodels.IMessageModel;
-import com.baijiayun.playback.context.LPConstants;
+import com.baijiayun.playback.context.PBConstants;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.IChatMessageCallback;
 import com.baijiayun.videoplayer.ui.utils.Utils;
@@ -99,7 +99,7 @@ public class PBMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         final IMessageModel messageModel = messageModelList.get(position);
 
         int color;
-        if (messageModel.getFrom().getType() == LPConstants.LPUserType.Teacher) {
+        if (messageModel.getFrom().getType() == PBConstants.LPUserType.Teacher) {
             color = ContextCompat.getColor(context, R.color.pb_live_blue);
         } else {
             color = ContextCompat.getColor(context, R.color.pb_secondary_text);
@@ -112,8 +112,8 @@ public class PBMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             PBTextViewHolder textViewHolder = (PBTextViewHolder) holder;
             textViewHolder.textView.setText(spanText);
             textViewHolder.textView.append(messageModel.getContent());
-            if (messageModel.getFrom().getType() == LPConstants.LPUserType.Teacher ||
-                    messageModel.getFrom().getType() == LPConstants.LPUserType.Assistant) {
+            if (messageModel.getFrom().getType() == PBConstants.LPUserType.Teacher ||
+                    messageModel.getFrom().getType() == PBConstants.LPUserType.Assistant) {
                 Linkify.addLinks(textViewHolder.textView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
             } else {
                 textViewHolder.textView.setAutoLinkMask(0);

@@ -36,12 +36,15 @@ import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
+import com.baijiayun.videoplayer.ui.listener.IRetryEnterRoomCallback;
 import com.baijiayun.videoplayer.ui.playback.chat.PBChatFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.ChatPictureViewFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.ChatSavePicDialogFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.IChatMessageCallback;
 import com.baijiayun.videoplayer.ui.playback.viewsupport.AutoExitDrawerLayout;
 import com.baijiayun.videoplayer.ui.playback.viewsupport.DragFrameLayout;
+import com.baijiayun.videoplayer.ui.utils.ConstantUtil;
+import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
 import com.baijiayun.videoplayer.ui.widget.BJYPlaybackContainer;
 import com.baijiayun.videoplayer.ui.widget.BJYVideoView;
 import com.baijiayun.videoplayer.util.Utils;
@@ -132,7 +135,6 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 .progress(true, 100, false)
                 .cancelable(true)
                 .build();
-        launchStepDlg.show();
         //修复某些机器上surfaceView导致的闪黑屏的bug
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
     }
@@ -226,6 +228,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
     }
 
     private void initRoom() {
+        initData();
         //初始化播放器
         videoPlayer = new VideoPlayerFactory.Builder()
                 //后台暂停播放
@@ -239,10 +242,6 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 //绑定activity生命周期
                 .setLifecycle(getLifecycle()).build();
 
-        long roomId = getIntent().getLongExtra("roomId", 0L);
-        String token = getIntent().getStringExtra("token");
-        long sessionId = getIntent().getLongExtra("sessionId", -1L);
-        pbRoom = BJYPlayerSDK.newPlayBackRoom(this, roomId, sessionId, token);
         bjyVideoView.initPlayer(videoPlayer, false);
         //pbRoom持有videoplayer引用
         pbRoom.bindPlayer(videoPlayer);
@@ -250,6 +249,15 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         bigContainer.attachPBRoom(pbRoom);
         //ppt view持有
         whiteboardView.attachPBRoom(pbRoom);
+        if(bigContainer.checkNetState()){
+            launchStepDlg.show();
+            enterRoom();
+        }
+        addChatFragment();
+        bigContainer.setRetryEnterRoomCallback(() -> enterRoom());
+    }
+
+    private void enterRoom(){
         pbRoom.enterRoom(new LPLaunchListener() {
             @Override
             public void onLaunchSteps(int step, int totalStep) {
@@ -276,7 +284,21 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 }
             }
         });
-        addChatFragment();
+    }
+
+    private void initData(){
+        String roomId, token, sessionId;
+        if (getIntent().getStringExtra(ConstantUtil.PB_ROOM_SESSION_ID) == null) {
+            String videoFilePath = getIntent().getStringExtra(ConstantUtil.PB_ROOM_VIDEOFILE_PATH);
+            String signalFilePath = getIntent().getStringExtra(ConstantUtil.PB_ROOM_SIGNALFILE_PATH);
+            pbRoom = BJYPlayerSDK.newPlayBackRoom(this, videoFilePath, signalFilePath);
+        } else {
+            roomId = getIntent().getStringExtra(ConstantUtil.PB_ROOM_ID);
+            token = getIntent().getStringExtra(ConstantUtil.PB_ROOM_TOKEN);
+            sessionId = getIntent().getStringExtra(ConstantUtil.PB_ROOM_SESSION_ID);
+            pbRoom = BJYPlayerSDK.newPlayBackRoom(this, Long.valueOf(roomId), Long.valueOf(sessionId), token);
+
+        }
     }
 
     private void addChatFragment() {

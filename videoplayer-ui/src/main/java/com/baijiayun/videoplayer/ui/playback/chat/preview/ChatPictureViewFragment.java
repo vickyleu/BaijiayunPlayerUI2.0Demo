@@ -52,10 +52,8 @@ public class ChatPictureViewFragment extends BaseDialogFragment  {
         imageView =  contentView.findViewById(R.id.lp_dialog_big_picture_img);
         tvLoading =  contentView.findViewById(R.id.lp_dialog_big_picture_loading_label);
 
-        RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true);
         Glide.with(getContext())
                 .load(AliCloudImageUtil.getScaledUrl(url, AliCloudImageUtil.SCALED_MFIT, DisplayUtils.getScreenWidthPixels(getContext()), DisplayUtils.getScreenHeightPixels(getContext())))
-                .apply(requestOptions)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

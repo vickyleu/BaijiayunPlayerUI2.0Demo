@@ -12,25 +12,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.baijiayun.videoplayer.event.EventKey;
-import com.baijiayun.videoplayer.ui.component.BaseComponent;
 import com.baijiayun.videoplayer.ui.component.ComponentManager;
-import com.baijiayun.videoplayer.ui.component.ControllerComponent;
-import com.baijiayun.videoplayer.ui.component.ErrorComponent;
-import com.baijiayun.videoplayer.ui.component.GestureComponent;
-import com.baijiayun.videoplayer.ui.component.LoadingComponent;
-import com.baijiayun.videoplayer.ui.component.MenuComponent;
 import com.baijiayun.videoplayer.ui.event.EventDispatcher;
-import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.listener.IComponent;
-import com.baijiayun.videoplayer.ui.listener.IComponentChangeListener;
 import com.baijiayun.videoplayer.ui.listener.IComponentEventListener;
 import com.baijiayun.videoplayer.ui.listener.IFilter;
-import com.baijiayun.videoplayer.ui.listener.OnLoopListener;
 import com.baijiayun.videoplayer.ui.listener.PlayerStateGetter;
-
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by yongjiaming on 2018/8/7

@@ -19,6 +19,8 @@ import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.player.error.PlayerError;
 import com.baijiayun.videoplayer.ui.component.ComponentManager;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
+import com.baijiayun.videoplayer.ui.listener.IRetryEnterRoomCallback;
+import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
 
 /**
  * Created by yongjiaming on 2018/9/10 20:00
@@ -26,6 +28,7 @@ import com.baijiayun.videoplayer.ui.event.UIEventKey;
 public class BJYPlaybackContainer extends BaseVideoView {
 
     private FrameLayout pptOrVideoContainer;
+    private IRetryEnterRoomCallback retryEnterRoomCallback;
 
     public BJYPlaybackContainer(@NonNull Context context) {
         this(context, null);
@@ -102,7 +105,9 @@ public class BJYPlaybackContainer extends BaseVideoView {
         super.requestPlayAction();
         //房间信息未初始化成功
         if (getVideoInfo() == null || getVideoInfo().getVideoId() == 0) {
-            Toast.makeText(getContext(), "房间信息未初始化成功，请重新进入", Toast.LENGTH_LONG).show();
+            if(retryEnterRoomCallback != null){
+                retryEnterRoomCallback.retryEnterRoom();
+            }
         } else {
             play();
         }
@@ -121,5 +126,23 @@ public class BJYPlaybackContainer extends BaseVideoView {
 
     public void setGestureEnable(boolean enable) {
         componentContainer.setGestureEnable(enable);
+    }
+
+    public boolean checkNetState(){
+        if (!enablePlayWithMobileNetwork && NetworkUtils.isMobile(NetworkUtils.getNetworkState(getContext()))) {
+            sendCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
+            return false;
+        }
+        return true;
+    }
+
+    public void setRetryEnterRoomCallback(IRetryEnterRoomCallback retryEnterRoomCallback) {
+        this.retryEnterRoomCallback = retryEnterRoomCallback;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        retryEnterRoomCallback = null;
     }
 }

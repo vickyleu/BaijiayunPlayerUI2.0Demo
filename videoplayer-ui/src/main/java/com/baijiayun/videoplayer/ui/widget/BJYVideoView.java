@@ -91,6 +91,11 @@ public class BJYVideoView extends BaseVideoView {
         addView(audioCoverIv);
     }
 
+    /**
+     *
+     * @param videoPlayer
+     * @param shouldRenderCustomComponent 是否渲染播放器组件。回放只显示视频，不显示其它组件
+     */
     public void initPlayer(IBJYVideoPlayer videoPlayer, boolean shouldRenderCustomComponent) {
 
         bjyVideoPlayer = videoPlayer;
@@ -134,6 +139,9 @@ public class BJYVideoView extends BaseVideoView {
                     componentContainer.dispatchPlayEvent(UIEventKey.PLAYER_CODE_BUFFERING_END, null);
                 }
             });
+        } else {
+            //回放模式下不监听网络
+            useDefaultNetworkListener = false;
         }
 
         bjyVideoPlayer.setOnPlayerStatusChangeListener(status -> {

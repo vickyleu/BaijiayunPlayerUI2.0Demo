@@ -9,7 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.baijiayun.BJYPlayerSDK;
-import com.baijiayun.playback.context.LPConstants;
+import com.baijiayun.playback.context.PBConstants;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -38,13 +38,13 @@ public class LauncherActivity extends AppCompatActivity {
         //默认正式服
         int env = sharedPreferences.getInt(ENVIRONMENT, 2);
         if(env == 0){
-            BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
+            BJYPlayerSDK.DEPLOY_TYPE = PBConstants.LPDeployType.Test;
             testRadion.setChecked(true);
         } else if(env == 1){
-            BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
+            BJYPlayerSDK.DEPLOY_TYPE = PBConstants.LPDeployType.Beta;
             betaRadion.setChecked(true);
         } else{
-            BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
+            BJYPlayerSDK.DEPLOY_TYPE = PBConstants.LPDeployType.Product;
             productRadio.setChecked(true);
         }
         videoLauncherBtn.setOnClickListener(v -> {
@@ -58,13 +58,13 @@ public class LauncherActivity extends AppCompatActivity {
     private void initListener(){
         ((RadioGroup) findViewById(R.id.rg_env)).setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rg_env_product) {
-                BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Product;
+                BJYPlayerSDK.DEPLOY_TYPE = PBConstants.LPDeployType.Product;
                 sharedPreferences.edit().putInt(ENVIRONMENT, 2).apply();
             } else if (checkedId == R.id.rg_env_beta) {
-                BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Beta;
+                BJYPlayerSDK.DEPLOY_TYPE = PBConstants.LPDeployType.Beta;
                 sharedPreferences.edit().putInt(ENVIRONMENT, 1).apply();
             } else {
-                BJYPlayerSDK.DEPLOY_TYPE = LPConstants.LPDeployType.Test;
+                BJYPlayerSDK.DEPLOY_TYPE = PBConstants.LPDeployType.Test;
                 sharedPreferences.edit().putInt(ENVIRONMENT, 0).apply();
             }
         });

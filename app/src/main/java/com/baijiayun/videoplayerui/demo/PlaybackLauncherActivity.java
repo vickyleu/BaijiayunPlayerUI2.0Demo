@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.baijiayun.videoplayer.ui.activity.PBRoomActivity;
+import com.baijiayun.videoplayer.ui.utils.ConstantUtil;
 
 /**
  * 回放启动页
@@ -56,9 +57,9 @@ public class PlaybackLauncherActivity extends AppCompatActivity {
             editor.putString("token", token);
             editor.putString("sessionId", sessionId).apply();
             Intent intent = new Intent(PlaybackLauncherActivity.this, PBRoomActivity.class);
-            intent.putExtra("roomId", Long.valueOf(roomId));
-            intent.putExtra("token", token);
-            intent.putExtra("sessionId", Long.valueOf(sessionId));
+            intent.putExtra(ConstantUtil.PB_ROOM_ID, roomId);
+            intent.putExtra(ConstantUtil.PB_ROOM_TOKEN, token);
+            intent.putExtra(ConstantUtil.PB_ROOM_SESSION_ID, sessionId);
             startActivity(intent);
         });
     }
