@@ -264,7 +264,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 if (launchStepDlg == null) {
                     return;
                 }
-                launchStepDlg.setContent("enter room:" + step * 100 / totalStep + "%");
+                //launchStepDlg.setContent("enter room:" + step * 100 / totalStep + "%");
             }
 
             @Override
