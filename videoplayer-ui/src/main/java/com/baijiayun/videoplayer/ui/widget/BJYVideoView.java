@@ -1,6 +1,5 @@
 package com.baijiayun.videoplayer.ui.widget;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -59,12 +58,7 @@ public class BJYVideoView extends BaseVideoView {
     }
 
     public BJYVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BJYVideoView(@NonNull Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BJVideoView, 0, 0);
         if (a.hasValue(R.styleable.BJVideoView_aspect_ratio)) {
             mAspectRatio = a.getInt(R.styleable.BJVideoView_aspect_ratio, AspectRatio.AspectRatio_16_9.ordinal());
@@ -224,29 +218,6 @@ public class BJYVideoView extends BaseVideoView {
         bjyVideoPlayer.setupLocalVideoWithFilePath(path);
     }
 
-    /**
-     * 设置播放百家云下载的本地视频
-     *
-     * @param downloadModel 百家云下载的model
-     */
-    public void setupLocalVideoWithDownloadModel(DownloadModel downloadModel) {
-        bjyVideoPlayer.setupLocalVideoWithDownloadModel(downloadModel);
-    }
-
-
-    /**
-     * 使用surfaceview播放视频
-     */
-    public void setRenderWithSurfaceView() {
-        bjyPlayerView.setRenderType(IRender.RENDER_TYPE_SURFACE_VIEW);
-    }
-
-    /**
-     * 使用textureview播放视频
-     */
-    public void setRenderWithTextureView() {
-        bjyPlayerView.setRenderType(IRender.RENDER_TYPE_TEXTURE_VIEW);
-    }
 
     /**
      * 更新纯音频占位图状态

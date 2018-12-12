@@ -17,6 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by yongjiaming on 2018/8/7
+ * 播放器ui组件管理器
  */
 
 public class ComponentManager {

@@ -60,6 +60,13 @@ public class PBRoomUI {
         context.startActivity(intent);
     }
 
+    /**
+     * 进入离线回放标准UI界面
+     * @param context                      activity
+     * @param videoPath                    视频路径
+     * @param signalPath                   信令路径
+     * @param onEnterPBRoomFailedListener  进房间错误监听，可为null
+     */
     public static void enterLocalPBRoom(Context context, String videoPath, String signalPath,
                                    OnEnterPBRoomFailedListener onEnterPBRoomFailedListener) {
         if (!(context instanceof Activity)) {
