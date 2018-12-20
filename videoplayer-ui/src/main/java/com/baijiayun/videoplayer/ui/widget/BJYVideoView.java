@@ -205,7 +205,7 @@ public class BJYVideoView extends BaseVideoView {
         if (!enablePlayWithMobileNetwork && NetworkUtils.isMobile(NetworkUtils.getNetworkState(getContext()))) {
             sendCustomEvent(UIEventKey.CUSTOM_CODE_NETWORK_CHANGE_TO_MOBILE, null);
         } else {
-            bjyVideoPlayer.setupOnlineVideoWithId(videoId, token, encrypted);
+            bjyVideoPlayer.setupOnlineVideoWithId(videoId, token);
         }
     }
 
