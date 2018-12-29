@@ -237,8 +237,6 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 .setSupportLooping(true)
                 //开启记忆播放
                 .setSupportBreakPointPlay(true, this)
-                //优先播放音频
-                .setAudioFirst(true)
                 //绑定activity生命周期
                 .setLifecycle(getLifecycle()).build();
 

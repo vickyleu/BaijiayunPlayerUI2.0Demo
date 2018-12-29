@@ -102,25 +102,25 @@ public class BJYVideoView extends BaseVideoView {
         if (shouldRenderCustomComponent) {
             initComponentContainer();
 
-            bjyVideoPlayer.setOnPlayerErrorListener(error -> {
+            bjyVideoPlayer.addOnPlayerErrorListener(error -> {
                 Bundle bundle = BundlePool.obtain();
                 bundle.putString(EventKey.STRING_DATA, error.getMessage());
                 componentContainer.dispatchErrorEvent(error.getCode(), bundle);
             });
 
-            bjyVideoPlayer.setOnPlayingTimeChangeListener((currentTime, duration) -> {
+            bjyVideoPlayer.addOnPlayingTimeChangeListener((currentTime, duration) -> {
                 //只通知到controller component
                 Bundle bundle = BundlePool.obtainPrivate(UIEventKey.KEY_CONTROLLER_COMPONENT, currentTime);
                 componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE, bundle);
             });
 
-            bjyVideoPlayer.setOnBufferUpdateListener(bufferedPercentage -> {
+            bjyVideoPlayer.addOnBufferUpdateListener(bufferedPercentage -> {
                 //只通知到controller component
                 Bundle bundle = BundlePool.obtainPrivate(UIEventKey.KEY_CONTROLLER_COMPONENT, bufferedPercentage);
                 componentContainer.dispatchPlayEvent(OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE, bundle);
             });
 
-            bjyVideoPlayer.setOnBufferingListener(new OnBufferingListener() {
+            bjyVideoPlayer.addOnBufferingListener(new OnBufferingListener() {
                 @Override
                 public void onBufferingStart() {
                     BJLog.d("bjy", "onBufferingStart invoke");
@@ -138,7 +138,7 @@ public class BJYVideoView extends BaseVideoView {
             useDefaultNetworkListener = false;
         }
 
-        bjyVideoPlayer.setOnPlayerStatusChangeListener(status -> {
+        bjyVideoPlayer.addOnPlayerStatusChangeListener(status -> {
             if (status == PlayerStatus.STATE_PREPARED) {
                 updateAudioCoverStatus(bjyVideoPlayer.getVideoInfo() != null && bjyVideoPlayer.getVideoInfo().getDefinition() == VideoDefinition.Audio);
             }
