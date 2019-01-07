@@ -69,6 +69,19 @@ public class PBRoomUI {
      */
     public static void enterLocalPBRoom(Context context, String videoPath, String signalPath,
                                    OnEnterPBRoomFailedListener onEnterPBRoomFailedListener) {
+       enterLocalPBRoom(context, videoPath, signalPath, 0, onEnterPBRoomFailedListener);
+    }
+
+    /**
+     * 进入离线回放标准UI界面
+     * @param context                      activity
+     * @param videoPath                    视频路径
+     * @param signalPath                   信令路径
+     * @param recordType                   录制类型
+     * @param onEnterPBRoomFailedListener  进房间错误监听，可为null
+     */
+    public static void enterLocalPBRoom(Context context, String videoPath, String signalPath, int recordType,
+                                        OnEnterPBRoomFailedListener onEnterPBRoomFailedListener) {
         if (!(context instanceof Activity)) {
             if (onEnterPBRoomFailedListener != null) {
                 onEnterPBRoomFailedListener.onEnterPBRoomFailed("Please pass the context of an activity");
@@ -79,6 +92,7 @@ public class PBRoomUI {
         Intent intent = new Intent(context, PBRoomActivity.class);
         intent.putExtra(ConstantUtil.PB_ROOM_VIDEOFILE_PATH, videoPath);
         intent.putExtra(ConstantUtil.PB_ROOM_SIGNALFILE_PATH, signalPath);
+        intent.putExtra(ConstantUtil.PB_ROOM_RECORD_TYPE, recordType);
         context.startActivity(intent);
     }
 

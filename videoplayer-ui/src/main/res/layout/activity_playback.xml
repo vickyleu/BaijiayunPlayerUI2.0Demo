@@ -18,13 +18,16 @@
         android:id="@+id/dl_pb_chat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/fl_pb_container_big">
+        android:layout_below="@id/fl_pb_container_big"
+        android:visibility="gone"
+        >
 
         <FrameLayout
             android:id="@+id/fl_pb_chat_content_container"
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:layout_gravity="start">
+            android:layout_gravity="start"
+            >
         </FrameLayout>
 
     </com.baijiayun.videoplayer.ui.playback.viewsupport.AutoExitDrawerLayout>

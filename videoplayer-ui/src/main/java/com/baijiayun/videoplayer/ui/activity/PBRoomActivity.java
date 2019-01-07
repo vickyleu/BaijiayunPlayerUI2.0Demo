@@ -36,7 +36,6 @@ import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
-import com.baijiayun.videoplayer.ui.listener.IRetryEnterRoomCallback;
 import com.baijiayun.videoplayer.ui.playback.chat.PBChatFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.ChatPictureViewFragment;
 import com.baijiayun.videoplayer.ui.playback.chat.preview.ChatSavePicDialogFragment;
@@ -44,7 +43,6 @@ import com.baijiayun.videoplayer.ui.playback.chat.preview.IChatMessageCallback;
 import com.baijiayun.videoplayer.ui.playback.viewsupport.AutoExitDrawerLayout;
 import com.baijiayun.videoplayer.ui.playback.viewsupport.DragFrameLayout;
 import com.baijiayun.videoplayer.ui.utils.ConstantUtil;
-import com.baijiayun.videoplayer.ui.utils.NetworkUtils;
 import com.baijiayun.videoplayer.ui.widget.BJYPlaybackContainer;
 import com.baijiayun.videoplayer.ui.widget.BJYVideoView;
 import com.baijiayun.videoplayer.util.Utils;
@@ -128,7 +126,6 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         //设置ppt背景色
         whiteboardView.setBackgroundColor(ContextCompat.getColor(this, R.color.lp_ppt_bg));
 
-        bigContainer.addPPTView(whiteboardView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         bjyVideoView = findViewById(R.id.pb_bjy_videoview);
         launchStepDlg = new MaterialDialog.Builder(this)
                 .content("正在加载...")
@@ -251,9 +248,10 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
             launchStepDlg.show();
             enterRoom();
         }
-        addChatFragment();
         bigContainer.setRetryEnterRoomCallback(() -> enterRoom());
     }
+
+    private int recordType = 0;
 
     private void enterRoom(){
         pbRoom.enterRoom(new LPLaunchListener() {
@@ -279,6 +277,26 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 hasLaunchSuccess = true;
                 if (launchStepDlg != null) {
                     launchStepDlg.dismiss();
+                }
+                if(room.isPlayBackOffline()){
+                    recordType = getIntent().getIntExtra(ConstantUtil.PB_ROOM_RECORD_TYPE, 0);
+                } else{
+                    recordType = room.getRecordType();
+                }
+                //webrtc回放，只播视频
+                if(room.getRecordType() != 0){
+                    whiteboardView.destroy();
+                    whiteboardView = null;
+                    View videoView = dragFrameLayout.getChildAt(0);
+                    dragFrameLayout.removeAllViews();
+                    dragFrameLayout.setVisibility(View.GONE);
+                    bigContainer.addView(videoView, 0);
+                    bigContainer.setGestureEnable(true);
+                    PBRoomActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                } else{
+                    bigContainer.addPPTView(whiteboardView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    chatDrawerLayout.setVisibility(View.VISIBLE);
+                    addChatFragment();
                 }
             }
         });
@@ -360,7 +378,9 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
             lpChatDrawer.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             lpChatDrawer.addRule(RelativeLayout.ABOVE, R.id.iv_pb_chat_switch);
             lpChatDrawer.topMargin = DisplayUtils.dip2px(this, 30);
-            chatSwitchIv.setVisibility(View.VISIBLE);
+            if(recordType == 0){
+                chatSwitchIv.setVisibility(View.VISIBLE);
+            }
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             chatDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
@@ -456,7 +476,9 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        whiteboardView.destroy();
+        if(whiteboardView != null){
+            whiteboardView.destroy();
+        }
         if (pbRoom != null) {
             pbRoom.quitRoom();
         }

@@ -2,6 +2,7 @@ package com.baijiayun.videoplayerui.demo;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,7 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.baijiayun.playback.util.PBUtils;
 import com.baijiayun.videoplayer.ui.activity.PBRoomActivity;
+import com.baijiayun.videoplayer.ui.playback.PBRoomUI;
 import com.baijiayun.videoplayer.ui.utils.ConstantUtil;
 
 /**
@@ -56,11 +59,7 @@ public class PlaybackLauncherActivity extends AppCompatActivity {
             editor.putString("roomId", roomId);
             editor.putString("token", token);
             editor.putString("sessionId", sessionId).apply();
-            Intent intent = new Intent(PlaybackLauncherActivity.this, PBRoomActivity.class);
-            intent.putExtra(ConstantUtil.PB_ROOM_ID, roomId);
-            intent.putExtra(ConstantUtil.PB_ROOM_TOKEN, token);
-            intent.putExtra(ConstantUtil.PB_ROOM_SESSION_ID, sessionId);
-            startActivity(intent);
+            PBRoomUI.enterPBRoom(PlaybackLauncherActivity.this, roomId, token, sessionId, null);
         });
     }
 
