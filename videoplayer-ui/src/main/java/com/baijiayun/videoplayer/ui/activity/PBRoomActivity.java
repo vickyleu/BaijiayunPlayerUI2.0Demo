@@ -250,7 +250,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         }
         bigContainer.setRetryEnterRoomCallback(() -> enterRoom());
     }
-
+    //0普通大班课回放，1大班课webrtc回放，2小班课webrtc回放
     private int recordType = 0;
 
     private void enterRoom(){
@@ -284,7 +284,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                     recordType = room.getRecordType();
                 }
                 //webrtc回放，只播视频
-                if(room.getRecordType() != 0){
+                if(recordType == 2){
                     whiteboardView.destroy();
                     whiteboardView = null;
                     View videoView = dragFrameLayout.getChildAt(0);
@@ -378,7 +378,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
             lpChatDrawer.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             lpChatDrawer.addRule(RelativeLayout.ABOVE, R.id.iv_pb_chat_switch);
             lpChatDrawer.topMargin = DisplayUtils.dip2px(this, 30);
-            if(recordType == 0){
+            if(recordType != 2){
                 chatSwitchIv.setVisibility(View.VISIBLE);
             }
         } else {
@@ -487,5 +487,14 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         }
         bigContainer.onDestroy();
         LPRxUtils.dispose(saveImageDisposable);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(recordType != 2){
+            super.onBackPressed();
+        } else{
+            onBackPressedExitImmediately();
+        }
     }
 }

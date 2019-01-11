@@ -21,6 +21,13 @@ public class BaseActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    /**
+     * 直接退出
+     */
+    protected void onBackPressedExitImmediately(){
+        super.onBackPressed();
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
