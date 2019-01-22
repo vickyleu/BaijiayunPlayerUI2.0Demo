@@ -147,10 +147,10 @@ public class BaseVideoView extends FrameLayout implements PlayerStateGetter{
      * 回收资源
      */
     public void onDestroy() {
+        unregisterNetChangeReceiver();
         bjyVideoPlayer.release();
         componentEventListener = null;
         componentContainer.destroy();
-        unregisterNetChangeReceiver();
     }
 
     /**
@@ -287,6 +287,9 @@ public class BaseVideoView extends FrameLayout implements PlayerStateGetter{
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            if(bjyVideoPlayer.isPlayLocalVideo()){
+                return;
+            }
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
                 int netState = NetworkUtils.getNetworkState(context);
                 if (!enablePlayWithMobileNetwork && NetworkUtils.isMobile(netState)) {

@@ -244,7 +244,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         bigContainer.attachPBRoom(pbRoom);
         //ppt view持有
         whiteboardView.attachPBRoom(pbRoom);
-        if(bigContainer.checkNetState()){
+        if(pbRoom.isPlayBackOffline() || bigContainer.checkNetState()){
             launchStepDlg.show();
             enterRoom();
         }
