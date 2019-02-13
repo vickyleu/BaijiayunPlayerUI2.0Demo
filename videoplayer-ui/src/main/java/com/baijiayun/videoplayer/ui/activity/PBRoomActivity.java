@@ -278,11 +278,14 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 if (launchStepDlg != null) {
                     launchStepDlg.dismiss();
                 }
+                /*
+                FIXME 暂时注释
                 if(room.isPlayBackOffline()){
                     recordType = getIntent().getIntExtra(ConstantUtil.PB_ROOM_RECORD_TYPE, 0);
                 } else{
                     recordType = room.getRecordType();
                 }
+                */
                 //webrtc回放，只播视频
                 if(recordType == 2){
                     whiteboardView.destroy();
