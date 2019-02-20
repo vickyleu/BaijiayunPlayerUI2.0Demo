@@ -9,13 +9,13 @@
             android:name=".activity.PBRoomActivity"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:hardwareAccelerated="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".activity.VideoPlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme" />
-        <activity android:name=".activity.BaseActivity"></activity>
+        <activity android:name=".activity.BaseActivity"/>
     </application>
 
 </manifest>
