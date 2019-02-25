@@ -2,15 +2,24 @@ package com.baijiayun.videoplayer.ui.activity;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Surface;
 
 import com.baijiayun.videoplayer.ui.playback.BaseDialogFragment;
 
 public class BaseActivity extends AppCompatActivity {
 
     protected boolean isLandscape;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isLandscape = getWindowManager().getDefaultDisplay().getRotation() == Surface.ROTATION_90;
+    }
 
     @Override
     public void onBackPressed() {

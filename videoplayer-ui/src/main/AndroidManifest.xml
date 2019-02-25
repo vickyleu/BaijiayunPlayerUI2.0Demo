@@ -8,7 +8,6 @@
         <activity
             android:name=".activity.PBRoomActivity"
             android:configChanges="orientation|screenSize|layoutDirection"
-            android:hardwareAccelerated="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".activity.VideoPlayActivity"
