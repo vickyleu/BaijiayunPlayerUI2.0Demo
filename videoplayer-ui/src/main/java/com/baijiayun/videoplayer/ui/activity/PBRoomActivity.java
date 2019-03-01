@@ -278,15 +278,11 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 if (launchStepDlg != null) {
                     launchStepDlg.dismiss();
                 }
-                /*
-                FIXME 暂时注释
                 if(room.isPlayBackOffline()){
                     recordType = getIntent().getIntExtra(ConstantUtil.PB_ROOM_RECORD_TYPE, 0);
                 } else{
                     recordType = room.getRecordType();
                 }
-                */
-                //webrtc回放，只播视频
                 if(recordType == 2){
                     whiteboardView.destroy();
                     whiteboardView = null;
@@ -298,6 +294,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                     PBRoomActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 } else{
                     bigContainer.addPPTView(whiteboardView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    bigContainer.setGestureEnable(true);
                     chatDrawerLayout.setVisibility(View.VISIBLE);
                     addChatFragment();
                 }
