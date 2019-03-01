@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,7 +31,7 @@ import com.baijiayun.videoplayer.util.Utils;
  * Created by yongjiaming on 2018/8/7
  */
 
-public class ControllerComponent extends BaseComponent implements OnTouchGestureListener{
+public class ControllerComponent extends BaseComponent implements OnTouchGestureListener {
 
     private final int MSG_CODE_DELAY_HIDDEN_CONTROLLER = 101;
 
@@ -77,10 +78,10 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
         switch (eventCode) {
             case OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE:
                 PlayerStatus status = (PlayerStatus) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
-                if(status == null){
+                if (status == null) {
                     break;
                 }
-                switch (status){
+                switch (status) {
                     case STATE_PAUSED:
                         mStateIcon.setSelected(true);
                         break;
@@ -91,7 +92,7 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
                     case STATE_INITIALIZED:
                         mBufferPercentage = 0;
                         updateUI(0, 0);
-                        if(getStateGetter().getVideoInfo() != null){
+                        if (getStateGetter().getVideoInfo() != null) {
                             setTitle(getStateGetter().getVideoInfo().getVideoTitle());
                         }
                         break;
@@ -100,6 +101,13 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
             case OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE:
                 int currentTime = bundle.getInt(EventKey.INT_DATA);
                 updateUI(currentTime, getStateGetter().getDuration());
+                //通过这种方式判断视频播完完成，因为STATE_PLAYBACK_COMPLETED状态回调之后还会补发一个timer update
+                if (getStateGetter().getPlayerStatus() == PlayerStatus.STATE_PLAYBACK_COMPLETED && currentTime == getStateGetter().getDuration()) {
+                    mStateIcon.setSelected(true);
+                    mSeekBar.setProgress(0);
+                    mSeekBar.setSecondaryProgress(0);
+                    setCurrTime(0, getStateGetter().getDuration());
+                }
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE:
                 BJLog.d("bjy", "buffering update " + bundle.getInt(EventKey.INT_DATA));
@@ -133,7 +141,7 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
 
     @Override
     public void onComponentEvent(int eventCode, Bundle bundle) {
-        switch (eventCode){
+        switch (eventCode) {
             case UIEventKey.CUSTOM_CODE_REQUEST_SEEK:
                 int seekToPos = bundle.getInt(EventKey.INT_DATA);
                 updateUI(seekToPos, getStateGetter().getDuration());
@@ -218,7 +226,7 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
     }
 
     private void toggleController() {
-        if(!NetworkUtils.isNetConnected(getContext())){
+        if (!NetworkUtils.isNetConnected(getContext())) {
             return;
         }
         if (isControllerShow()) {

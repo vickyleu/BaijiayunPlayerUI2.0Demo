@@ -14,7 +14,6 @@ import android.widget.ImageView;
 
 import com.baijiayun.BJYPlayerSDK;
 import com.baijiayun.constant.VideoDefinition;
-import com.baijiayun.download.DownloadModel;
 import com.baijiayun.glide.Glide;
 import com.baijiayun.videoplayer.IBJYVideoPlayer;
 import com.baijiayun.videoplayer.event.BundlePool;

@@ -12,10 +12,8 @@ import android.widget.TextView;
 
 import com.baijiayun.glide.Glide;
 import com.baijiayun.glide.load.DataSource;
-import com.baijiayun.glide.load.engine.DiskCacheStrategy;
 import com.baijiayun.glide.load.engine.GlideException;
 import com.baijiayun.glide.request.RequestListener;
-import com.baijiayun.glide.request.RequestOptions;
 import com.baijiayun.glide.request.target.Target;
 import com.baijiayun.playback.ppt.util.AliCloudImageUtil;
 import com.baijiayun.playback.util.DisplayUtils;
