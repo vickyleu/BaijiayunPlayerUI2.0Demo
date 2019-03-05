@@ -283,6 +283,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 } else{
                     recordType = room.getRecordType();
                 }
+                //除了webrtc大班课以外的其他webrtc课型（双师，小班课等）
                 if(recordType == 2){
                     whiteboardView.destroy();
                     whiteboardView = null;

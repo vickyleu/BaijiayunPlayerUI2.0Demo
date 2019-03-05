@@ -34,6 +34,13 @@
             android:text="PROD" />
     </RadioGroup>
 
+    <EditText
+        android:id="@+id/custom_domain_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="个性域名（选填）"
+        android:layout_marginTop="30dp"
+        />
 
     <Button
         android:id="@+id/video_launcher_btn"
