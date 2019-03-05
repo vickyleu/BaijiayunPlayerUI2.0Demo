@@ -3,6 +3,13 @@
 =============
 CHANGELOG 
 
+VideoplayerUI 2.0.1
+==============
+- fix 初始化为横屏切换横竖屏失效
+- 视频播放完底部状态栏状态归零
+- 开启PPT窗口手势
+- 更新VideoplayerCore to 2.0.3
+
 VideoplayerUI 2.0.0
 ==============
 - 全新设计，更解耦
