@@ -22,7 +22,7 @@ public class VideoPlayActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_bj_video_play);
 
         videoView = findViewById(R.id.bjyvideoview);
         videoView.initPlayer(new VideoPlayerFactory.Builder()

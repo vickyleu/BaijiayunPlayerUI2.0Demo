@@ -104,7 +104,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
             savedInstanceState.remove(FRAGMENTS_TAG);
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playback);
+        setContentView(R.layout.activity_bj_playback);
         initView();
         //允许PPT缩放手势（同时关闭了音量、亮度调节）
         setPPTScaleEnable(true);
