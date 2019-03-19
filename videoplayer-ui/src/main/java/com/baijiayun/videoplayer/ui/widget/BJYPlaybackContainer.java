@@ -95,7 +95,7 @@ public class BJYPlaybackContainer extends BaseVideoView {
     protected void requestPlayAction() {
         super.requestPlayAction();
         //房间信息未初始化成功
-        if (getVideoInfo() == null || getVideoInfo().getVideoId() == 0) {
+        if (!bjyVideoPlayer.isPlayLocalVideo() && (getVideoInfo() == null || getVideoInfo().getVideoId() == 0)) {
             if(retryEnterRoomCallback != null){
                 retryEnterRoomCallback.retryEnterRoom();
             }

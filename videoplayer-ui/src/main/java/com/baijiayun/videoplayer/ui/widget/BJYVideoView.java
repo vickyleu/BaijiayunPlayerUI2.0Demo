@@ -169,7 +169,7 @@ public class BJYVideoView extends BaseVideoView {
     protected void requestPlayAction() {
         super.requestPlayAction();
         //视频未初始化成功则请求视频地址
-        if (getVideoInfo() == null || getVideoInfo().getVideoId() == 0) {
+        if (!bjyVideoPlayer.isPlayLocalVideo() && (getVideoInfo() == null || getVideoInfo().getVideoId() == 0)) {
             setupOnlineVideoWithId(videoId, token, encrypted);
             sendCustomEvent(UIEventKey.CUSTOM_CODE_REQUEST_VIDEO_INFO, null);
         } else {
