@@ -5,7 +5,7 @@ CHANGELOG
 
 VideoplayerUI 2.0.1.1
 ==============
-更新VideoplayerCore to 2.0.4.2
+- 更新VideoplayerCore to 2.0.4.2
 
 VideoplayerUI 2.0.1
 ==============
