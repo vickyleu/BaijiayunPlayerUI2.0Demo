@@ -226,7 +226,7 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
     }
 
     private void toggleController() {
-        if (!NetworkUtils.isNetConnected(getContext())) {
+        if (!getStateGetter().isPlayLocalVideo() && !NetworkUtils.isNetConnected(getContext())) {
             return;
         }
         if (isControllerShow()) {

@@ -199,6 +199,11 @@ public class BaseVideoView extends FrameLayout implements PlayerStateGetter{
         return bjyVideoPlayer.getMediaPlayerDebugInfo();
     }
 
+    @Override
+    public boolean isPlayLocalVideo() {
+        return bjyVideoPlayer.isPlayLocalVideo();
+    }
+
     /**
      * 获取缓冲百分比
      *

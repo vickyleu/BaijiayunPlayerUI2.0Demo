@@ -72,4 +72,6 @@ public interface PlayerStateGetter {
     BJYVideoInfo getVideoInfo();
 
     MediaPlayerDebugInfo getMediaPlayerDebugInfo();
+
+    boolean isPlayLocalVideo();
 }

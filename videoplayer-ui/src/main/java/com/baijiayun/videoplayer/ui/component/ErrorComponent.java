@@ -53,6 +53,7 @@ public class ErrorComponent extends BaseComponent {
                     return;
                 }
                 switch (playerStatus) {
+                    case STATE_INITIALIZED:
                     case STATE_PREPARED:
                     case STATE_STARTED:
                     case STATE_PLAYBACK_COMPLETED:
