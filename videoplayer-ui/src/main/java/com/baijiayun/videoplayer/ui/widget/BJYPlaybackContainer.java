@@ -26,6 +26,7 @@ public class BJYPlaybackContainer extends BaseVideoView {
 
     private FrameLayout pptOrVideoContainer;
     private IRetryEnterRoomCallback retryEnterRoomCallback;
+    private PBRoom pbRoom;
 
     public BJYPlaybackContainer(@NonNull Context context) {
         this(context, null);
@@ -63,6 +64,7 @@ public class BJYPlaybackContainer extends BaseVideoView {
      * @param pbRoom
      */
     public void attachPBRoom(PBRoom pbRoom) {
+        this.pbRoom = pbRoom;
         bjyVideoPlayer = pbRoom.getPlayer();
         bjyVideoPlayer.addOnBufferingListener(new OnBufferingListener() {
             @Override
@@ -95,7 +97,7 @@ public class BJYPlaybackContainer extends BaseVideoView {
     protected void requestPlayAction() {
         super.requestPlayAction();
         //房间信息未初始化成功
-        if (!bjyVideoPlayer.isPlayLocalVideo() && (getVideoInfo() == null || getVideoInfo().getVideoId() == 0)) {
+        if ((pbRoom != null && !pbRoom.isPlayBackOffline()) && (getVideoInfo() == null || getVideoInfo().getVideoId() == 0)) {
             if(retryEnterRoomCallback != null){
                 retryEnterRoomCallback.retryEnterRoom();
             }

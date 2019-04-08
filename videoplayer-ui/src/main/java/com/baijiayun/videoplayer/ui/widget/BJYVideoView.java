@@ -47,6 +47,7 @@ public class BJYVideoView extends BaseVideoView {
     private ImageView audioCoverIv;
     private int mAspectRatio = AspectRatio.AspectRatio_16_9.ordinal();
     private int mRenderType = IRender.RENDER_TYPE_SURFACE_VIEW;
+    private boolean isPlayOnlineVideo = false;
 
     public BJYVideoView(@NonNull Context context) {
         this(context, null);
@@ -169,7 +170,7 @@ public class BJYVideoView extends BaseVideoView {
     protected void requestPlayAction() {
         super.requestPlayAction();
         //视频未初始化成功则请求视频地址
-        if (!bjyVideoPlayer.isPlayLocalVideo() && (getVideoInfo() == null || getVideoInfo().getVideoId() == 0)) {
+        if (isPlayOnlineVideo && (getVideoInfo() == null || getVideoInfo().getVideoId() == 0)) {
             setupOnlineVideoWithId(videoId, token, encrypted);
             sendCustomEvent(UIEventKey.CUSTOM_CODE_REQUEST_VIDEO_INFO, null);
         } else {
@@ -206,6 +207,7 @@ public class BJYVideoView extends BaseVideoView {
         } else {
             bjyVideoPlayer.setupOnlineVideoWithId(videoId, token);
         }
+        isPlayOnlineVideo = true;
     }
 
     /**
@@ -215,6 +217,7 @@ public class BJYVideoView extends BaseVideoView {
      */
     public void setupLocalVideoWithFilePath(String path) {
         bjyVideoPlayer.setupLocalVideoWithFilePath(path);
+        isPlayOnlineVideo = false;
     }
 
 
