@@ -26,12 +26,6 @@ public class PBRoomUI {
      */
     public static void enterPBRoom(Context context, String roomId, String roomToken, String sessionId,
                                    OnEnterPBRoomFailedListener onEnterPBRoomFailedListener) {
-        if (!(context instanceof Activity)) {
-            if (onEnterPBRoomFailedListener != null) {
-                onEnterPBRoomFailedListener.onEnterPBRoomFailed("Please pass the context of an activity");
-            }
-            return;
-        }
         try {
             if (Long.valueOf(roomId) <= 0) {
                 if (onEnterPBRoomFailedListener != null) {
@@ -82,12 +76,6 @@ public class PBRoomUI {
      */
     public static void enterLocalPBRoom(Context context, String videoPath, String signalPath, int recordType,
                                         OnEnterPBRoomFailedListener onEnterPBRoomFailedListener) {
-        if (!(context instanceof Activity)) {
-            if (onEnterPBRoomFailedListener != null) {
-                onEnterPBRoomFailedListener.onEnterPBRoomFailed("Please pass the context of an activity");
-            }
-            return;
-        }
 
         Intent intent = new Intent(context, PBRoomActivity.class);
         intent.putExtra(ConstantUtil.PB_ROOM_VIDEOFILE_PATH, videoPath);
