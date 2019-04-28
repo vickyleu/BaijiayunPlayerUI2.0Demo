@@ -3,6 +3,12 @@
 =============
 CHANGELOG 
 
+VideoplayerUI 2.0.1.2
+==============
+- 更新VideoplayerCore to 2.0.4.3
+- fix 移动网络无法播放
+- fix 离线播放 controllellerComponent不响应点击
+
 VideoplayerUI 2.0.1.1
 ==============
 - 更新VideoplayerCore to 2.0.4.2
