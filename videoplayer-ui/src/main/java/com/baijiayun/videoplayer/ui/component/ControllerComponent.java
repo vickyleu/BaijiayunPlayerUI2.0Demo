@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.baijiayun.BJYPlayerSDK;
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
 import com.baijiayun.videoplayer.event.OnPlayerEventListener;
@@ -237,6 +238,10 @@ public class ControllerComponent extends BaseComponent implements OnTouchGesture
     }
 
     private void sendDelayHiddenMessage() {
+        //调试模式不隐藏进度条
+        if(BJYPlayerSDK.IS_DEVELOP_MODE){
+            return;
+        }
         removeDelayHiddenMessage();
         mHandler.sendEmptyMessageDelayed(MSG_CODE_DELAY_HIDDEN_CONTROLLER, 5000);
     }
