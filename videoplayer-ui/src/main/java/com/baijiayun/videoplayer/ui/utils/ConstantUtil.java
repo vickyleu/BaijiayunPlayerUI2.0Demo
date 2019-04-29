@@ -13,5 +13,4 @@ public class ConstantUtil {
     public static final String PB_ROOM_SIGNALFILE_PATH = "pb_room_signal_file_path";
     public static final String PB_ROOM_RECORD_TYPE = "pb_room_record_type";
 
-    public static final String AUDIO_ON_PICTURE = "http://live-cdn.baijiayun.com/web/playback/asset/classroom/mediaPanel/img/audioOn.png";
 }

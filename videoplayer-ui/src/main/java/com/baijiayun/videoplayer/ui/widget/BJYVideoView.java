@@ -228,7 +228,7 @@ public class BJYVideoView extends BaseVideoView {
         if (isAudio) {
             audioCoverIv.setVisibility(View.VISIBLE);
             Glide.with(this)
-                    .load(BJYPlayerSDK.AUDIO_ON_PICTURE)
+                    .load(R.drawable.ic_audio_only)
                     .into(audioCoverIv);
         } else {
             audioCoverIv.setVisibility(View.GONE);
