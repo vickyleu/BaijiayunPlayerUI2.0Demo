@@ -40,7 +40,7 @@
         android:layout_marginBottom="30dp"
         android:layout_marginLeft="10dp"
         android:layout_alignBottom="@id/fl_pb_container_big"
-        android:src="@drawable/ic_video_back_sentmsg_no"
+        app:srcCompat="@drawable/ic_video_back_sentmsg_no"
         tools:visibility="visible"
         android:visibility="gone" />
 

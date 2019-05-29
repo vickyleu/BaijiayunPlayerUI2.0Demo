@@ -6,11 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.baijiayun.constant.MediaPlayerDebugInfo;
 import com.baijiayun.constant.VideoDefinition;

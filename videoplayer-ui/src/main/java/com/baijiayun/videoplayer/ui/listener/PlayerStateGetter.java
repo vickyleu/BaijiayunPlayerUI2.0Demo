@@ -17,7 +17,7 @@
 package com.baijiayun.videoplayer.ui.listener;
 
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.baijiayun.constant.MediaPlayerDebugInfo;
 import com.baijiayun.videoplayer.bean.BJYVideoInfo;

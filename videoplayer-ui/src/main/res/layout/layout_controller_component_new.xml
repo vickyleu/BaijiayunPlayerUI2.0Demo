@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -22,7 +23,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:scaleType="centerInside"
-                android:src="@mipmap/icon_player_back"/>
+                app:srcCompat="@mipmap/icon_player_back"/>
             <TextView
                 android:id="@+id/cover_player_controller_text_view_video_title"
                 android:layout_width="wrap_content"
@@ -51,7 +52,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="centerInside"
-            android:src="@drawable/selector_play_state"/>
+            app:srcCompat="@drawable/selector_play_state"/>
         <TextView
             android:id="@+id/cover_player_controller_text_view_curr_time"
             android:layout_width="wrap_content"
@@ -87,7 +88,7 @@
             android:padding="8dp"
             android:scaleType="centerInside"
             android:layout_marginRight="5dp"
-            android:src="@mipmap/icon_full_screen"/>
+            app:srcCompat="@mipmap/icon_full_screen"/>
     </LinearLayout>
 
 </RelativeLayout>

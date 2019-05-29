@@ -4,15 +4,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.baijiayun.BJYPlayerSDK;
 import com.baijiayun.constant.VideoDefinition;
 import com.baijiayun.glide.Glide;
 import com.baijiayun.videoplayer.IBJYVideoPlayer;

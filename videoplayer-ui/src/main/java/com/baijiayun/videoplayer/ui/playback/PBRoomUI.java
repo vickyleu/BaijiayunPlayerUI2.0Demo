@@ -25,8 +25,13 @@ public class PBRoomUI {
      * @param onEnterPBRoomFailedListener 进房间错误监听，可为null
      */
     public static void enterPBRoom(Context context, String roomId, String roomToken, String sessionId,
+                                   OnEnterPBRoomFailedListener onEnterPBRoomFailedListener){
+        enterPBRoom(context, roomId, roomToken, null,null,sessionId, onEnterPBRoomFailedListener);
+    }
+    public static void enterPBRoom(Context context, String roomId, String roomToken,String username, String identify, String sessionId,
                                    OnEnterPBRoomFailedListener onEnterPBRoomFailedListener) {
         try {
+
             if (Long.valueOf(roomId) <= 0) {
                 if (onEnterPBRoomFailedListener != null) {
                     onEnterPBRoomFailedListener.onEnterPBRoomFailed("invalid room id");
@@ -51,6 +56,9 @@ public class PBRoomUI {
         intent.putExtra(ConstantUtil.PB_ROOM_ID, roomId);
         intent.putExtra(ConstantUtil.PB_ROOM_TOKEN, roomToken);
         intent.putExtra(ConstantUtil.PB_ROOM_SESSION_ID, sessionId);
+        intent.putExtra(ConstantUtil.PB_ROOM_USERNAME, username);
+        intent.putExtra(ConstantUtil.PB_ROOM_USER_IDENTITY, identify);
+
         context.startActivity(intent);
     }
 
@@ -75,13 +83,18 @@ public class PBRoomUI {
      * @param onEnterPBRoomFailedListener  进房间错误监听，可为null
      */
     public static void enterLocalPBRoom(Context context, String videoPath, String signalPath, int recordType,
+                                        String username, String identify,
                                         OnEnterPBRoomFailedListener onEnterPBRoomFailedListener) {
-
         Intent intent = new Intent(context, PBRoomActivity.class);
         intent.putExtra(ConstantUtil.PB_ROOM_VIDEOFILE_PATH, videoPath);
         intent.putExtra(ConstantUtil.PB_ROOM_SIGNALFILE_PATH, signalPath);
         intent.putExtra(ConstantUtil.PB_ROOM_RECORD_TYPE, recordType);
         context.startActivity(intent);
+    }
+ public static void enterLocalPBRoom(Context context, String videoPath, String signalPath, int recordType,
+                                        OnEnterPBRoomFailedListener onEnterPBRoomFailedListener) {
+enterLocalPBRoom(context, videoPath, signalPath, recordType,null,null, onEnterPBRoomFailedListener);
+
     }
 
     public interface OnEnterPBRoomFailedListener {

@@ -1,6 +1,5 @@
 package com.baijiayun.videoplayer.ui.component;
 
-import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Build;
@@ -12,6 +11,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.baijiayun.videoplayer.event.BundlePool;
 import com.baijiayun.videoplayer.event.EventKey;
@@ -159,7 +160,7 @@ public class GestureComponent extends BaseComponent implements OnTouchGestureLis
     }
 
     private void onBrightnessSlide(float percent) {
-        Activity activity = getActivity();
+        AppCompatActivity activity = getActivity();
         if (activity == null) {
             return;
         }
@@ -293,10 +294,10 @@ public class GestureComponent extends BaseComponent implements OnTouchGestureLis
         fastForwardLl.setVisibility(state ? View.VISIBLE : View.GONE);
     }
 
-    private Activity getActivity() {
+    private AppCompatActivity getActivity() {
         Context context = getContext();
-        if (context instanceof Activity) {
-            return (Activity) context;
+        if (context instanceof AppCompatActivity) {
+            return (AppCompatActivity) context;
         }
         return null;
     }

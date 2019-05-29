@@ -1,5 +1,6 @@
 package com.baijiayun.videoplayer.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -9,10 +10,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +38,8 @@ import com.baijiayun.playback.util.LPRxUtils;
 import com.baijiayun.videoplayer.IBJYVideoPlayer;
 import com.baijiayun.videoplayer.VideoPlayerFactory;
 import com.baijiayun.videoplayer.event.BundlePool;
+import com.baijiayun.videoplayer.listeners.OnPlayerStatusChangeListener;
+import com.baijiayun.videoplayer.player.PlayerStatus;
 import com.baijiayun.videoplayer.ui.R;
 import com.baijiayun.videoplayer.ui.event.UIEventKey;
 import com.baijiayun.videoplayer.ui.playback.chat.PBChatFragment;
@@ -72,6 +78,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
     private IBJYVideoPlayer videoPlayer;
     private PBRoom pbRoom;
 
+    private PowerManager.WakeLock wl;
     private MaterialDialog launchStepDlg;
     //ppt控件
     private WhiteboardView whiteboardView;
@@ -104,12 +111,25 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
             savedInstanceState.remove(FRAGMENTS_TAG);
         }
         super.onCreate(savedInstanceState);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock((PowerManager.PARTIAL_WAKE_LOCK|PowerManager.ACQUIRE_CAUSES_WAKEUP), "BJYPlayer:playback");
+
+
         setContentView(R.layout.activity_bj_playback);
         initView();
         //允许PPT缩放手势（同时关闭了音量、亮度调节）
         setPPTScaleEnable(true);
         initListener();
         initRoom();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
     }
 
     private void initView() {
@@ -119,7 +139,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         chatSwitchIv = findViewById(R.id.iv_pb_chat_switch);
 
         chatDrawerLayout = findViewById(R.id.dl_pb_chat);
-        chatDrawerLayout.openDrawer(Gravity.START);
+        chatDrawerLayout.openDrawer(GravityCompat.START);
         chatDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
 
         whiteboardView = new WhiteboardView(this);
@@ -238,17 +258,64 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                 .setLifecycle(getLifecycle()).build();
 
         bjyVideoView.initPlayer(videoPlayer, false);
+        videoPlayer.addOnPlayerStatusChangeListener(new OnPlayerStatusChangeListener() {
+            @Override
+            public void onStatusChange(PlayerStatus playerStatus) {
+                switch (playerStatus){
+                    case STATE_INITIALIZED:
+                        break;
+                    case STATE_PREPARED:
+                    case STATE_STARTED:
+                        try {
+                            if(wl!=null)
+                                // 屏幕将停留在设定的状态，一般为亮、暗状态
+                                wl.acquire();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        break;
+                    case STATE_ERROR:
+                    case STATE_IDLE:
+                    case STATE_PAUSED:
+                    case STATE_STOPPED:
+                    case STATE_PLAYBACK_COMPLETED:
+                        try {
+                            if(wl!=null)
+                                // 屏幕将停留在设定的状态，一般为亮、暗状态
+                                wl.release();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+            }
+        });
         //pbRoom持有videoplayer引用
         pbRoom.bindPlayer(videoPlayer);
         //视频&ppt容器持有pbRoom
         bigContainer.attachPBRoom(pbRoom);
         //ppt view持有
         whiteboardView.attachPBRoom(pbRoom);
+
+
         if(pbRoom.isPlayBackOffline() || bigContainer.checkNetState()){
             launchStepDlg.show();
             enterRoom();
         }
         bigContainer.setRetryEnterRoomCallback(() -> enterRoom());
+
+        String username=getIntent().getStringExtra(ConstantUtil.PB_ROOM_USERNAME);
+        String identify=getIntent().getStringExtra(ConstantUtil.PB_ROOM_USER_IDENTITY);
+        if (TextUtils.isEmpty(username)){
+            username="匿名用户";
+        }
+        if (TextUtils.isEmpty(identify)){
+            username="0";
+        }
+        videoPlayer.setUserInfo(username,identify);
+
+
+
     }
     //0普通大班课回放，1大班课webrtc回放，2小班课webrtc回放
     private int recordType = 0;
@@ -275,6 +342,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
             @Override
             public void onLaunchSuccess(PBRoom room) {
                 hasLaunchSuccess = true;
+
                 if (launchStepDlg != null) {
                     launchStepDlg.dismiss();
                 }
@@ -476,6 +544,13 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
 
     @Override
     protected void onDestroy() {
+        try {
+            if(wl!=null)
+                wl.release();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        wl=null;
         super.onDestroy();
         if(whiteboardView != null){
             whiteboardView.destroy();
