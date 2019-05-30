@@ -112,6 +112,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
         }
         super.onCreate(savedInstanceState);
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//        wl = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, "BJYPlayer:playback");
         wl = pm.newWakeLock((PowerManager.PARTIAL_WAKE_LOCK|PowerManager.ACQUIRE_CAUSES_WAKEUP), "BJYPlayer:playback");
 
 
