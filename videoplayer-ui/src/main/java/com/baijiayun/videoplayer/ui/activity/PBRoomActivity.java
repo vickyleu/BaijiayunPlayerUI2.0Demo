@@ -281,9 +281,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
                     case STATE_STOPPED:
                     case STATE_PLAYBACK_COMPLETED:
                         try {
-                            if(wl!=null)
-                                // 屏幕将停留在设定的状态，一般为亮、暗状态
-                                wl.release();
+                            if(wl!=null&&wl.isHeld()) wl.release();
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -546,8 +544,7 @@ public class PBRoomActivity extends BaseActivity implements IChatMessageCallback
     @Override
     protected void onDestroy() {
         try {
-            if(wl!=null)
-                wl.release();
+            if(wl!=null&&wl.isHeld()) wl.release();
         }catch (Exception e){
             e.printStackTrace();
         }
